@@ -1,0 +1,66 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"scopeName": "source.casio.lst",
+	"name": "debug",
+	"patterns": [
+		{ "include": "#comments" },
+		{ "include": "#doublequotes" },
+		{ "include": "#comma" },
+		{ "include": "#label" },
+		{ "include": "#instruction" },
+		{ "include": "#directive" },
+		{ "include": "#register" },
+		{ "include": "#SECTION" },
+		{ "include": "#hexadecimal" },
+		{ "include": "#decimal" },
+		{ "include": "#invalid" }
+	],
+	"repository": {
+		"comments": {
+			"name": "comment.line.asm",
+			"match": "(?i);.*$|COMMENT|SH SERIES.+|\\d{2}-\\w{3}-\\d{4} \\d{2}.+|\\*+[\\s\\w]+\\*+|^FILE NAME: .*+$|^\\s+[A-Z_]\\w*(?:\\.\\w+)?\\s+\\d+\\s+.*$|^\\s+\\+.*$|\\s+subcommand=.*$"
+		},
+		"doublequotes": {
+			"name": "string.quoted.double",
+			"match": "\\\".*?\\\""
+		},
+		"label": {
+			"name": "support.function.asm",
+			"match": "(?<=\\s)(?:_[\\w\\d_$]+:?|L\\d{3,4}:?(?:\\+\\d{1,2})?|LABEL\\s)"
+		},
+		"comma": {
+			"match": ","
+		},
+		"instruction": {
+			"name": "keyword.other.asm.mnemonic",
+			"match": "(?i)(?<=\\s)(?:ADD[CV]?|(?:AND|X?OR|TAS|TST)(?:\\.B)?|BF(?:/S)?|BRAF?|BSRF?|BT(?:/S)?|CLR(?:MAC|[ST])|CMP/(?:EQ|G[ET]|H[IS]|P[LZ]|STR)|DIV0[SU]|DIV1|DMUL[SU].L|DT|EXT[SU]\\.[BW]|JMP|JSR|LDC(?:\\.L)?|LDR[ES]|LDS.L|LDTLB|MAC(?:\\.[LW])?|MOV(?:\\.[BLW]|[AT])?|MUL.L|MUL[SU].W|NEGC?|NOP|NOT|PREF|ROTC[LR]|ROT[LR]|RT[ES]|SETRC|SET[ST]|SHA[DLR]|SHL[DL]|SHLL(?:[28]|16)?|SHLR(?:[28]|16)?|SLEEP|STC(?:\\.L)?|STS(?:\\.L)?|SUB[CV]?|SWAP(?:\\.[BLW])?|TRAPA|XTRCT|INSTRUCTION)\\s"
+		},
+		"directive": {
+			"name": "keyword.control.asm",
+			"match": "(?i)(?<=\\s)\\.(?:ALIGN|DATAB?\\.[BLW]|END|EXPORT|RES\\.[BLW]|SDATA)\\s"
+		},
+		"register": {
+			"name": "support.variable.asm",
+			"match": "(?i)@(?:R1[0-5]|R\\d)\\+?|@-?(?:R1[0-5]|R\\d)|R1[0-5]|R[0-7]_BANK|R\\d|@\\(.*?\\)|PR|MAC[HL]|OPERAND|SPC|S?SR|[GV]BR"
+		},
+		"SECTION": {
+			"name": "meta.preprocessor.string",
+			"match": "^\\w+|SECTION"
+		},
+		"hexadecimal": {
+			"match": "(?i)#?H'-?\\h{1,8}\\s?(?:\\+[\\w_]+)?|(?<=\\s)<?\\h{2,10}>?(?:\\s\\+)?|OFFSET|CODE",
+			"captures": {
+				"0": { "name": "constant.numeric.integer.hexadecimal" },
+				"1": { "name": "support.function.asm" }
+			}
+		},
+		"decimal": {
+			"name": "constant.numeric.integer.decimal",
+			"match": "(?<=\\s?)#?-?\\d+(?=\\s?)|\\bC\\b"
+		},
+		"invalid": {
+			"name": "invalid.illegal",
+			"match": "."
+		}
+	}
+}

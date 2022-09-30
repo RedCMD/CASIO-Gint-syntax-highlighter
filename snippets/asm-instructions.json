@@ -1,0 +1,562 @@
+{
+	"ADD": {
+		"description": "Add binary (2 Opperands): This instruction adds together the contents of general registers Rn and Rm and stores the result in Rn. 8-bit immediate data can also be added to the contents of general register Rn. 8-bit immediate data is sign-extended to 32 bits, allowing use in decrement operations. ",
+		"prefix": "add",
+		"body": "${BLOCK_COMMENT_END:\t}add\t${2|r,@r,@r-|}${3|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"ADDC": {
+		"description": "Add with Carry (2 Opperands): This instruction adds together the contents of general registers Rn and Rm and the T bit, and stores the result in Rn. A carry resulting from the operation is reflected in the T bit. This instruction is used for additions exceeding 32 bits. ",
+		"prefix": "addc",
+		"body": "\taddc\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"ADDV": {
+		"description": "Add with (V flag) Overflow Check (2 Opperands): This instruction adds together the contents of general registers Rn and Rm and stores the result in Rn. If overflow occurs, the T bit is set. ",
+		"prefix": "addv",
+		"body": "\taddv\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"AND": {
+		"description": "AND Logical (2 Opperands): This instruction ANDs the contents of general registers Rn and Rm and stores the result in Rn. This instruction can be used to AND general register R0 contents with zero-extended 8-bit immediate data, or, in indexed GBR indirect addressing mode, to AND 8-bit memory with 8-bit immediate data. ",
+		"prefix": "and",
+		"body": "\tand\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"BF": {
+		"description": "Branch if False (2 Opperands): This is a conditional branch instruction that references the T bit. The branch is taken if T = 0, and not taken if T = 1. The branch destination is address (PC + 4 + displacement × 2). The PC source value is the BF instruction address. As the 8-bit displacement is multiplied by two after sign-extension, the branch destination can be located in the range from –256 to +254 bytes from the BF instruction. ",
+		"prefix": "bf",
+		"body": "\tbf\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"BF/S": {
+		"description": "Branch if False with Delay Slot (2 Opperands): This is a delayed conditional branch instruction that references the T bit. If T = 1, the next instruction is executed and the branch is not taken. If T = 0, the branch is taken after execution of the next instruction. The branch destination is address (PC + 4 + displacement × 2). The PC source value is the BF/S instruction address. As the 8-bit displacement is multiplied by two after sign-extension, the branch destination can be located in the range from –256 to +254 bytes from the BF/S instruction. ",
+		"prefix": "bf/s",
+		"body": "\tbf/s\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"BRA": {
+		"description": "Branch (2 Opperands): This is an unconditional branch instruction. The branch destination is address (PC + 4 + displacement × 2). The PC source value is the BRA instruction address. As the 12-bit displacement is multiplied by two after sign-extension, the branch destination can be located in the range from –4096 to +4094 bytes from the BRA instruction. If the branch destination cannot be reached, this branch can be performed with a JMP instruction. ",
+		"prefix": "bra",
+		"body": "\tbra\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"BRAF": {
+		"description": "Branch Far (2 Opperands): This is an unconditional branch instruction. The branch destination is address (PC + 4 + Rn). The branch destination address is the result of adding 4 plus the 32-bit contents of general register Rn to PC. ",
+		"prefix": "braf",
+		"body": "\tbraf\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"BT": {
+		"description": "Branch if True (2 Opperands): This is a conditional branch instruction that references the T bit. The branch is taken if T = 1, and not taken if T = 0. The branch destination is address (PC + 4 + displacement × 2). The PC source value is the BT instruction address. As the 8-bit displacement is multiplied by two after sign-extension, the branch destination can be located in the range from –256 to +254 bytes from the BT instruction. ",
+		"prefix": "bt",
+		"body": "\tbt\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"BT/S": {
+		"description": "Branch if True with Delay Slot (2 Opperands): This is a conditional branch instruction that references the T bit. The branch is taken if T = 1, and not taken if T = 0. The PC source value is the BT/S instruction address. As the 8-bit displacement is multiplied by two after sign-extension, the branch destination can be located in the range from –256 to +254 bytes from the BT/S instruction. ",
+		"prefix": "bt/s",
+		"body": "\tbt/s\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"CLRMAC": {
+		"description": "Clear MAC Register (2 Opperands): This instruction clears the MACH and MACL registers. ",
+		"prefix": "clrmac",
+		"body": "\tclrmac\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"CLRS": {
+		"description": "Clear S Bit (2 Opperands): This instruction clears the S bit to 0. ",
+		"prefix": "clrs",
+		"body": "\tclrs\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"CLRT": {
+		"description": "Clear T Bit (2 Opperands): This instruction clears the T bit. ",
+		"prefix": "clrt",
+		"body": "\tclrt\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"CMP/cond": {
+		"description": "Compare Conditionally (2 Opperands): This instruction compares general registers Rn and Rm, and sets the T bit if the specified condition (cond) is true. If the condition is false, the T bit is cleared. The contents of Rn are not changed. Nine conditions can be specified. For the two conditions PZ and PL, Rn is compared with 0. With the EQ condition, sign-extended 8-bit immediate data can be compared with R0. The contents of R0 are not changed.  Mnemonic Description CMP/EQ Rm,Rn If Rn = Rm, T = 1 CMP/GE Rm,Rn If Rn ≥ Rm as signed values, T = 1 CMP/GT Rm,Rn If Rn > Rm as signed values, T = 1 CMP/HI Rm,Rn If Rn > Rm as unsigned values, T = 1 CMP/HS Rm,Rn If Rn ≥ Rm as unsigned values, T = 1 CMP/PL Rn If Rn > 0, T = 1 CMP/PZ Rn If Rn ≥ 0, T = 1 CMP/STR Rm,Rn If any bytes are equal, T = 1 CMP/EQ #imm,R0 If R0 = imm, T = 1 ",
+		"prefix": "cmp/cond",
+		"body": "\tcmp/cond\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"DIV0S": {
+		"description": "Divide (Step 0) as Signed (2 Opperands): This instruction performs initial settings for signed division. This instruction is followed by a DIV1 instruction that executes 1-digit division, for example, and repeated divisions are executed to find the quotient. See the description of the DIV1 instruction for details. ",
+		"prefix": "div0s",
+		"body": "\tdiv0s\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"DIV0U": {
+		"description": "Divide (Step 0) as Unsigned (2 Opperands): This instruction performs initial settings for unsigned division. This instruction is followed by a DIV1 instruction that executes 1-digit division, for example, and repeated divisions are executed to find the quotient. See the description of the DIV1 instruction for details. ",
+		"prefix": "div0u",
+		"body": "\tdiv0u\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"DIV1": {
+		"description": "Divide 1 Step (2 Opperands): This instruction performs 1-digit division (1-step division) of the 32-bit contents of general register Rn (dividend) by the contents of Rm (divisor). The quotient is obtained by repeated execution of this instruction alone or in combination with other instructions. The specified registers and the M, Q, and T bits must not be modified during these repeated executions. In 1-step division, the dividend is shifted 1 bit to the left, the divisor is subtracted from this, and the quotient bit is reflected in the Q bit according to whether the result is positive or negative. The remainder can be found as follows after first finding the quotient using the DIV1 instruction: (Remainder) = (dividend) – (divisor) × (quotient) Detection of division by zero or overflow is not provided. Check for division by zero and overflow division before executing the division. A remainder operation is not provided. Find the remainder by finding the product of the divisor and the obtained quotient, and subtracting this value from the dividend. Initial settings should first be made with the DIV0S or DIV0U instruction. DIV1 is executed once for each bit of the divisor. If a quotient of more than 17 bits is required, place an ROTCL instruction before the DIV1 instruction. See the examples for details of the division sequence. ",
+		"prefix": "div1",
+		"body": "\tdiv1\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"DMULS.L": {
+		"description": "Double-length Multiply as Signed (2 Opperands): This instruction performs 32-bit multiplication of the contents of general register Rn by the contents of Rm, and stores the 64-bit result in the MACH and MACL registers. The multiplication is performed as a signed arithmetic operation. ",
+		"prefix": "dmuls.l",
+		"body": "\tdmuls.l\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"DMULU.L": {
+		"description": "Double-length Multiply as Unsigned (2 Opperands): This instruction performs 32-bit multiplication of the contents of general register Rn by the contents of Rm, and stores the 64-bit result in the MACH and MACL registers. The multiplication is performed as an unsigned arithmetic operation. ",
+		"prefix": "dmulu.l",
+		"body": "\tdmulu.l\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"DT": {
+		"description": "Decrement and Test (2 Opperands): This instruction decrements the contents of general register Rn by 1 and compares the result with zero. If the result is zero, the T bit is set to 1. If the result is nonzero, the T bit is cleared to 0. ",
+		"prefix": "dt",
+		"body": "\tdt\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"EXTS": {
+		"description": "Extend as Signed (2 Opperands): This instruction sign-extends the contents of general register Rm and stores the result in Rn. For a byte specification, the value of Rm bit 7 is transferred to Rn bits 8 to 31. For a word specification, the value of Rm bit 15 is transferred to Rn bits 16 to 31. ",
+		"prefix": "exts",
+		"body": "\texts\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"EXTU": {
+		"description": "Extend as Unsigned (2 Opperands): This instruction zero-extends the contents of general register Rm and stores the result in Rn. For a byte specification, 0 is transferred to Rn bits 8 to 31. For a word specification, 0 is transferred to Rn bits 16 to 31. ",
+		"prefix": "extu",
+		"body": "\textu\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"ICBI": {
+		"description": "Instruction Cache Block Invalidate (2 Opperands): This instruction accesses the instruction cache at the effective address indicated by the contents of Rn. When the cache is hit, the corresponding cache block is invalidated (the V bit is cleared to 0). At this time, write-back is not performed. No operation is performed in the case of a cache miss or access to a non-cache area. ",
+		"prefix": "icbi",
+		"body": "\ticbi\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"JMP": {
+		"description": "Jump (2 Opperands): Unconditionally makes a delayed branch to the address specified by Rn. ",
+		"prefix": "jmp",
+		"body": "\tjmp\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"LDC": {
+		"description": "Load to Control Register (2 Opperands): These instructions store the source operand in the control register GBR, VBR, SSR, SPC, DBR, SGR, SR or R0_BANK to R7_BANK.  ",
+		"prefix": "ldc",
+		"body": "\tldc\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"LDS": {
+		"description": "Load to System (or FPU) Register (2 Opperands): Stores the source operand into the system (or FPU) registers MACH, MACL, PR OR FPUL and FPSCR. ",
+		"prefix": "lds",
+		"body": "\tlds\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"LDTLB": {
+		"description": "Load PTEH/PTEL to TLB (2 Opperands): This instruction loads the contents of the PTEH/PTEL (TLB compatible mode), PTEH/PTEL/PTEA (TLB extended mode) registers into the TLB (translation lookaside buffer) specified by MMUCR.URC (random counter field in the MMC control register). LDTLB is a privileged instruction, and can only be used in privileged mode. Use of this instruction in user mode will cause an illegal instruction exception. ",
+		"prefix": "ldtlb",
+		"body": "\tldtlb\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MAC.L": {
+		"description": "Multiply and Accumulate Long (2 Opperands): This instruction performs signed multiplication of the 32-bit operands whose addresses are the contents of general registers Rm and Rn, adds the 64-bit result to the MAC register contents, and stores the result in the MAC register. Operands Rm and Rn are each incremented by 4 each time they are read. If the S bit is 0, the 64-bit result is stored in the linked MACH and MACL registers. If the S bit is 1, the addition to the MAC register contents is a saturation operation at the 48th bit from the LSB. In a saturation operation, only the lower 48 bits of the MAC register are valid, and the result range is limited to H'FFFF800000000000 (minimum value) to H'00007FFFFFFFFFFF (maximum value). ",
+		"prefix": "mac.l",
+		"body": "\tmac.l\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MAC.W": {
+		"description": "Multiply and Accumulate Word (2 Opperands): This instruction performs signed multiplication of the 16-bit operands whose addresses are the contents of general registers Rm and Rn, adds the 32-bit result to the MAC register contents, and stores the result in the MAC register. Operands Rm and Rn are each incremented by 2 each time they are read. If the S bit is 0, a 16 × 16 + 64 → 64-bit multiply-and-accumulate operation is performed, and the 64-bit result is stored in the linked MACH and MACL registers. If the S bit is 1, a 16 × 16 + 32 → 32-bit multiply-and-accumulate operation is performed, and the addition to the MAC register contents is a saturation operation. In a saturation operation, only the MACL register is valid, and the result range is limited to H'80000000 (minimum value) to H'7FFFFFFF (maximum value). If overflow occurs, the LSB of the MACH register is set to 1. H'80000000 (minimum value) is stored in the MACL register if the result overflows in the negative direction, and H'7FFFFFFF (maximum value) is stored if the result overflows in the positive direction ",
+		"prefix": "mac.w",
+		"body": "\tmac.w\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MOV": {
+		"description": "Move data (2 Opperands): This instruction transfers the source operand to the destination. When an operand is memory, the data size can be specified as byte, word, or longword. When the source operand is memory, the loaded data is sign-extended to longword before being stored in the register. ",
+		"prefix": "mov",
+		"body": "\tmov\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MOV": {
+		"description": "Move Constant Value (2 Opperands): This instruction stores immediate data, sign-extended to longword, in general register Rn. In the case of word or longword data, the data is stored from memory address (PC + 4 + displacement × 2) or (PC + 4 + displacement × 4). With word data, the 8-bit displacement is multiplied by two after zero-extension, and so the relative distance from the table is in the range up to PC + 4 + 510 bytes. The PC value is the address of this instruction. With longword data, the 8-bit displacement is multiplied by four after zero-extension, and so the relative distance from the operand is in the range up to PC + 4 + 1020 bytes. The PC value is the address of this instruction. A value with the lower 2 bits adjusted to B'00 is used in address calculation. ",
+		"prefix": "mov",
+		"body": "\tmov\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MOV": {
+		"description": "Move Global Data (2 Opperands): This instruction transfers the source operand to the destination. Byte, word, or longword can be specified as the data size, but the register is always R0. If the transfer data is byte-size, the 8-bit displacement is only zero-extended, so a range up to +255 bytes can be specified. If the transfer data is word-size, the 8-bit displacement is multiplied by two after zeroextension, enabling a range up to +510 bytes to be specified. With longword transfer data, the 8- bit displacement is multiplied by four after zero-extension, enabling a range up to +1020 bytes to be specified. When the source operand is memory, the loaded data is sign-extended to longword before being stored in the register. ",
+		"prefix": "mov",
+		"body": "\tmov\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MOV": {
+		"description": "Move Structure Data (2 Opperands): This instruction transfers the source operand to the destination. It is ideal for accessing data inside a structure or stack. Byte, word, or longword can be specified as the data size, but with byte or word data the register is always R0. If the data is byte-size, the 4-bit displacement is only zero-extended, so a range up to +15 bytes can be specified. If the data is word-size, the 4-bit displacement is multiplied by two after zeroextension, enabling a range up to +30 bytes to be specified. With longword data, the 4-bit displacement is multiplied by four after zero-extension, enabling a range up to +60 bytes to be specified. If a memory operand cannot be reached, the previously described @(R0,Rn) mode must be used. When the source operand is memory, the loaded data is sign-extended to longword before being stored in the register. ",
+		"prefix": "mov",
+		"body": "\tmov\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MOVA": {
+		"description": "Move Effective Address (2 Opperands): This instruction stores the source operand effective address in general register R0. The 8-bit displacement is multiplied by four after zero-extension. The PC value is the address of this instruction, but a value with the lower 2 bits adjusted to B'00 is used in address calculation. ",
+		"prefix": "mova",
+		"body": "\tmova\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MOVCA.L": {
+		"description": "Move with Cache Block Allocation (2 Opperands): This instruction stores the contents of general register R0 in the memory location indicated by effective address Rn. This instruction differs from other store instructions as follows. If write-back is selected for the accessed memory, and a cache miss occurs, the cache block will be allocated but an R0 data write will be performed to that cache block without performing a block read. Other contents in that cache block are undefined. ",
+		"prefix": "movca.l",
+		"body": "\tmovca.l\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MOVCO": {
+		"description": "Move Conditional (2 Opperands): MOVCO is used in combination with MOVLI to realize an atomic read-modifywrite operation in a single processor. This instruction copies the value of the LDST flag, an internal status of the CPU, to the T bit. When the T bit is set to 1, the value of R0 is stored at the address in Rm. If the T bit is cleared to 0, the value is not stored at the address in Rm. Finally, the LDST flag is cleared to 0. Since the LDST flag is cleared by an instruction or exception, storage by the MOVCO instruction only proceeds when no interrupt or exception has occurred between the execution of the MOVLI and MOVCO instructions. ",
+		"prefix": "movco",
+		"body": "\tmovco\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MOVLI": {
+		"description": "Move Linked (2 Opperands): MOVLI is used in combination with MOVCO to realize an atomic read-modifywrite operation in a single processor. This instruction sets the LDST flag to 1 and reads the four bytes of data indicated by Rm into R0. If, however, an interrupt or exception occurs, LDST is cleared to 0. Storage by the MOVCO instruction only proceeds when the instruction is executed after the LDST bit has been set by the MOVLI instruction and not cleared by an interrupt or other exception. When LDST has been cleared to 0, the MOVCO instruction clears the T bit and does not proceed with storage. ",
+		"prefix": "movli",
+		"body": "\tmovli\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MOVT": {
+		"description": "Move T Bit (2 Opperands): This instruction stores the T bit in general register Rn. When T = 1, Rn = 1; when T = 0, Rn = 0. ",
+		"prefix": "movt",
+		"body": "\tmovt\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MOVUA": {
+		"description": "Move Unaligned (2 Opperands): This instruction loads the longword of data from the effective address indicated by the contents of Rm in memory to R0. The address is not restricted to longword boundaries address (4n); this instruction allows loading from non-longword-boundary addresses (4n + 1, 4n + 2, and 4n + 3). Data address error exceptions do not occur when access is to non-longword-boundary addresses (4n + 1, 4n + 2, and 4n + 3). ",
+		"prefix": "movua",
+		"body": "\tmovua\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MUL.L": {
+		"description": "Multiply Long (2 Opperands): This instruction performs 32-bit multiplication of the contents of general registers Rn and Rm, and stores the lower 32 bits of the result in the MACL register. The contents of MACH are not changed. ",
+		"prefix": "mul.l",
+		"body": "\tmul.l\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MULS.W": {
+		"description": "Multiply as Signed Word (2 Opperands): This instruction performs 16-bit multiplication of the contents of general registers Rn and Rm, and stores the 32-bit result in the MACL register. The multiplication is performed as a signed arithmetic operation. The contents of MACH are not changed. ",
+		"prefix": "muls.w",
+		"body": "\tmuls.w\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"MULU.W": {
+		"description": "Multiply as Unsigned Word (2 Opperands): This instruction performs 16-bit multiplication of the contents of general registers Rn and Rm, and stores the 32-bit result in the MACL register. The multiplication is performed as an unsigned arithmetic operation. The contents of MACH are not changed. ",
+		"prefix": "mulu.w",
+		"body": "\tmulu.w\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"NEG": {
+		"description": "Negate (2 Opperands): This instruction finds the two's complement of the contents of general register Rm and stores the result in Rn. That is, it subtracts Rm from 0 and stores the result in Rn. ",
+		"prefix": "neg",
+		"body": "\tneg\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"NEGC": {
+		"description": "Negate with Carry (2 Opperands): This instruction subtracts the contents of general register Rm and the T bit from 0 and stores the result in Rn. A borrow resulting from the operation is reflected in the T bit. The NEGC instruction is used for sign inversion of a value exceeding 32 bits. ",
+		"prefix": "negc",
+		"body": "\tnegc\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"NOP": {
+		"description": "No Operation (2 Opperands): This instruction simply increments the program counter (PC), advancing the processing flow to execution of the next instruction. ",
+		"prefix": "nop",
+		"body": "\tnop\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"NOT": {
+		"description": "Not-logical Complement (2 Opperands): This instruction finds the one's complement of the contents of general register Rm and stores the result in Rn. That is, it inverts the Rm bits and stores the result in Rn. ",
+		"prefix": "not",
+		"body": "\tnot\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"OCBI": {
+		"description": "Operand Cache Block Invalidate (2 Opperands): This instruction accesses data using the contents indicated by effective address Rn. In the case of a hit in the cache, the corresponding cache block is invalidated (the V bit is cleared to 0). If there is unwritten information (U bit = 1), write-back is not performed even if write-back mode is selected. No operation is performed in the case of a cache miss or an access to a noncache area. If upper 8 bits of effective address (Rn[31:24]) is H'F4, the operation is special, the operand cache line with way = Rn[14:13], entry = Rn[12:5] is invalidated (the bit number is with 32 KB, 4 way operand cache case). ",
+		"prefix": "ocbi",
+		"body": "\tocbi\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"OCBP": {
+		"description": "Operand Cache Block Purge (2 Opperands): This instruction accesses data using the contents indicated by effective address Rn. If the cache is hit and there is unwritten information (U bit = 1), the corresponding cache block is written back to external memory and that block is invalidated (the V bit is cleared to 0). If there is no unwritten information (U bit = 0), the block is simply invalidated. No operation is performed in the case of a cache miss or an access to a non-cache area. If upper 8 bits of effective address (Rn[31:24]) is H'F4, the operation is special, the operand cache line with way = Rn[14:13], entry = Rn[12:5] is purged (the bit number is with 32 KB, 4 way operand cache case). ",
+		"prefix": "ocbp",
+		"body": "\tocbp\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"OCBWB": {
+		"description": "Operand Cache Block Write Back (2 Opperands): This instruction accesses data using the contents indicated by effective address Rn. If the cache is hit and there is unwritten information (U bit = 1), the corresponding cache block is written back to external memory and that block is cleaned (the U bit is cleared to 0). In other cases (i.e. in the case of a cache miss or an access to a non-cache area, or if the block is already clean), no operation is performed. If upper 8 bits of effective address (Rn[31:24]) is H'F4, the operation is special, the operand cache line with way = Rn[14:13], entry = Rn[12:5] is written back (the bit number is with 32 KB, 4 way operand cache case). ",
+		"prefix": "ocbwb",
+		"body": "\tocbwb\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"OR": {
+		"description": "OR Logical (2 Opperands): This instruction ORs the contents of general registers Rn and Rm and stores the result in Rn. This instruction can be used to OR general register R0 contents with zero-extended 8-bit immediate data, or, in indexed GBR indirect addressing mode, to OR 8-bit memory with 8-bit immediate data. ",
+		"prefix": "or",
+		"body": "\tor\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"PREF": {
+		"description": "Prefetch Data to Cache (2 Opperands): This instruction reads a 32-byte data block starting at a 32-byte boundary into the operand cache. The lower 5 bits of the address specified by Rn are masked to zero. This instruction does not generate data address error and MMU exceptions except data TLB multiple-hit exception. In the event of an error, the PREF instruction is treated as an NOP (no ",
+		"prefix": "pref",
+		"body": "\tpref\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"PREFI": {
+		"description": "Prefetch Instruction Cache Block (2 Opperands): This instruction reads a 32-byte block of data starting at a 32-byte boundary within the instruction cache. The lower 5 bits of the address specified by Rn are masked by zeroes. This instruction does not generate data address error and MMU exceptions. In the event of an error, the PREFI instruction is treated as an NOP (no operation) instruction. When the address to be prefetched is missing from UTLB or is protected, the PREFI instruction is treated as an NOP instruction and a TLB exception does not occur. ",
+		"prefix": "prefi",
+		"body": "\tprefi\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"ROTCL": {
+		"description": "Rotate with Carry Left (2 Opperands): This instruction rotates the contents of general register Rn one bit to the left through the T bit, and stores the result in Rn. The bit rotated out of the operand is transferred to the T bit. MSB LSB ROTCL T ",
+		"prefix": "rotcl",
+		"body": "\trotcl\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"ROTCR": {
+		"description": "Rotate with Carry Right (2 Opperands): This instruction rotates the contents of general register Rn one bit to the right through the T bit, and stores the result in Rn. The bit rotated out of the operand is transferred to the T bit. T MSB LSB ROTCR ",
+		"prefix": "rotcr",
+		"body": "\trotcr\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"ROTL": {
+		"description": "Rotate Left (2 Opperands): This instruction rotates the contents of general register Rn one bit to the left, and stores the result in Rn. The bit rotated out of the operand is transferred to the T bit. MSB LSB ROTL T ",
+		"prefix": "rotl",
+		"body": "\trotl\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"ROTR": {
+		"description": "Rotate Right (2 Opperands): This instruction rotates the contents of general register Rn one bit to the right, and stores the result in Rn. The bit rotated out of the operand is transferred to the T bit. MSB LSB ROTR T ",
+		"prefix": "rotr",
+		"body": "\trotr\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"RTE": {
+		"description": "Return from Exception (2 Opperands): This instruction returns from an exception or interrupt handling routine by restoring the PC and SR values from SPC and SSR. Program execution continues from the address specified by the restored PC value. RTE is a privileged instruction, and can only be used in privileged mode. Use of this instruction in user mode will cause an illegal instruction exception. ",
+		"prefix": "rte",
+		"body": "\trte\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"RTS": {
+		"description": "Return from Subroutine (2 Opperands): This instruction returns from a subroutine procedure by restoring the PC from PR. Processing continues from the address indicated by the restored PC value. This instruction can be used to return from a subroutine procedure called by a BSR or JSR instruction to the source of the call. ",
+		"prefix": "rts",
+		"body": "\trts\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SETS": {
+		"description": "Set S Bit (2 Opperands): This instruction sets the S bit to 1. ",
+		"prefix": "sets",
+		"body": "\tsets\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SETT": {
+		"description": "Set T Bit (2 Opperands): This instruction sets the T bit to 1. ",
+		"prefix": "sett",
+		"body": "\tsett\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SHAD": {
+		"description": "Shift Arithmetic Dynamically (2 Opperands): Rm < 0, Rn >> Rm → [MSB → Rn] 0100nnnnmmmm1100 1 — Description: This instruction arithmetically shifts the contents of general register Rn. General register Rm specifies the shift direction and the number of bits to be shifted. Rn register contents are shifted to the left if the Rm register value is positive, and to the right if negative. In a shift to the right, the MSB is added at the upper end. The number of bits to be shifted is specified by the lower 5 bits (bits 4 to 0) of the Rm register. If the value is negative (MSB = 1), the Rm register is represented as a two's complement. The left shift range is 0 to 31, and the right shift range, 1 to 32. MSB LSB 0 MSB Rm ≥ 0 Rm < 0 MSB LSB ",
+		"prefix": "shad",
+		"body": "\tshad\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SHAL": {
+		"description": "Shift Arithmetic Left (2 Opperands): This instruction arithmetically shifts the contents of general register Rn one bit to the left, and stores the result in Rn. The bit shifted out of the operand is transferred to the T bit. MSB LSB SHAL T 0 ",
+		"prefix": "shal",
+		"body": "\tshal\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SHAR": {
+		"description": "Shift Arithmetic Right (2 Opperands): This instruction arithmetically shifts the contents of general register Rn one bit to the right, and stores the result in Rn. The bit shifted out of the operand is transferred to the T bit. MSB LSB SHAR T ",
+		"prefix": "shar",
+		"body": "\tshar\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SHLD": {
+		"description": "Shift Logical Dynamically (2 Opperands): Rm < 0, Rn >> Rm → [0 → Rn] 0100nnnnmmmm1101 1 — Description: This instruction logically shifts the contents of general register Rn. General register Rm specifies the shift direction and the number of bits to be shifted. Rn register contents are shifted to the left if the Rm register value is positive, and to the right if negative. In a shift to the right, 0s are added at the upper end. The number of bits to be shifted is specified by the lower 5 bits (bits 4 to 0) of the Rm register. If the value is negative (MSB = 1), the Rm register is represented as a two's complement. The left shift range is 0 to 31, and the right shift range, 1 to 32. MSB LSB MSB 0 LSB 0 Rm ≥ 0 Rm < 0 ",
+		"prefix": "shld",
+		"body": "\tshld\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SHLL": {
+		"description": "Shift Logical Left  (2 Opperands): This instruction logically shifts the contents of general register Rn one bit to the left, and stores the result in Rn. The bit shifted out of the operand is transferred to the T bit. MSB LSB SHLL T 0 ",
+		"prefix": "shll",
+		"body": "\tshll\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SHLLn": {
+		"description": "n bits Shift Logical Left (2 Opperands): This instruction logically shifts the contents of general register Rn 2, 8, or 16 bits to the left, and stores the result in Rn. The bits shifted out of the operand are discarded. MSB LSB 0 SHLL8 SHLL16 MSB LSB 0 MSB LSB 0 SHLL2 ",
+		"prefix": "shlln",
+		"body": "\tshlln\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SHLR": {
+		"description": "Shift Logical Right (2 Opperands): This instruction logically shifts the contents of general register Rn one bit to the right, and stores the result in Rn. The bit shifted out of the operand is transferred to the T bit. MSB LSB SHLR 0 T ",
+		"prefix": "shlr",
+		"body": "\tshlr\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SHLRn": {
+		"description": "n bits Shift Logical Right (2 Opperands): This instruction logically shifts the contents of general register Rn 2, 8, or 16 bits to the right, and stores the result in Rn. The bits shifted out of the operand are discarded. MSB LSB 0 SHLR8 SHLR16 MSB LSB 0 MSB LSB 0 SHLR2 ",
+		"prefix": "shlrn",
+		"body": "\tshlrn\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SLEEP": {
+		"description": "Sleep (2 Opperands): This instruction places the CPU in the power-down state. In power-down mode, the CPU retains its internal state, but immediately stops executing instructions and waits for an interrupt request. When it receives an interrupt request, the CPU exits the power-down state. SLEEP is a privileged instruction, and can only be used in privileged mode. Use of this instruction in user mode will cause an illegal instruction exception. ",
+		"prefix": "sleep",
+		"body": "\tsleep\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"STC": {
+		"description": "Store Control Register (2 Opperands): This instruction stores control register GBR, VBR, SSR, SPC, SGR, DBR or Rm_BANK (m = 0–7) in the destination. Rm_BANK operands are specified by the RB bit of the SR register: when the RB bit is 1 Rm_BANK0 is accessed, when the RB bit is 0 Rm_BANK1 is accessed. ",
+		"prefix": "stc",
+		"body": "\tstc\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"STS": {
+		"description": "Store System Register (2 Opperands): This instruction stores system register MACH, MACL, or PR in the destination. ",
+		"prefix": "sts",
+		"body": "\tsts\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SUB": {
+		"description": "Subtract Binary (2 Opperands): This instruction subtracts the contents of general register Rm from the contents of general register Rn and stores the result in Rn. For immediate data subtraction, ADD #imm,Rn should be used. ",
+		"prefix": "sub",
+		"body": "\tsub\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SUBC": {
+		"description": "Subtract with Carry (2 Opperands): This instruction subtracts the contents of general register Rm and the T bit from the contents of general register Rn, and stores the result in Rn. A borrow resulting from the operation is reflected in the T bit. This instruction is used for subtractions exceeding 32 bits. ",
+		"prefix": "subc",
+		"body": "\tsubc\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SUBV": {
+		"description": "Subtract with (V flag) Underflow Check (2 Opperands): This instruction subtracts the contents of general register Rm from the contents of general register Rn, and stores the result in Rn. If underflow occurs, the T bit is set. ",
+		"prefix": "subv",
+		"body": "\tsubv\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SWAP": {
+		"description": "Swap Register Halves (2 Opperands): This instruction swaps the upper and lower parts of the contents of general register Rm, and stores the result in Rn. In the case of a byte specification, the 8 bits from bit 15 to bit 8 of Rm are swapped with the 8 bits from bit 7 to bit 0. The upper 16 bits of Rm are transferred directly to the upper 16 bits of Rn. In the case of a word specification, the 16 bits from bit 31 to bit 16 of Rm are swapped with the 16 bits from bit 15 to bit 0. ",
+		"prefix": "swap",
+		"body": "\tswap\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"SYNCO": {
+		"description": "Synchronize Data Operation (2 Opperands): This instruction is used to synchronize data operations. When this instruction is executed, the subsequent data accesses are not executed until the execution of all preceding bus accesses has been completed. ",
+		"prefix": "synco",
+		"body": "\tsynco\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"TAS": {
+		"description": "Test And Set (2 Opperands): This instruction purges the cache block corresponding to the memory area specified by the contents of general register Rn, reads the byte data indicated by that address, and sets the T bit to 1 if that data is zero, or clears the T bit to 0 if the data is nonzero. The instruction then sets bit 7 to 1 and writes to the same address. The bus is not released during this period. The purge operation is executed as follows. In a purge operation, data is accessed using the contents of general register Rn as the effective address. If there is a cache hit and the corresponding cache block is dirty (U bit = 1), the contents of that cache block are written back to external memory, and the cache block is then invalidated (by clearing the V bit to 0). If there is a cache hit and the corresponding cache block is clean (U bit = 0), the cache block is simply invalidated (by clearing the V bit to 0). A purge is not executed in the event of a cache miss, or if the accessed memory location is non-cacheable. The two TAS.B memory accesses are executed automatically. Another memory access is not executed between the two TAS.B accesses. ",
+		"prefix": "tas",
+		"body": "\ttas\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"TRAPA": {
+		"description": "Trap Always (2 Opperands): This instruction starts trap exception handling. The values of (PC + 2), SR, and R15 are saved to SPC, SSR and SGR, and 8-bit immediate data is stored in the TRA register (bits 9 to 2). The processor mode is switched to privileged mode (the MD bit in SR is set to 1), and the BL bit and RB bit in SR are set to 1. As a result, exception and interrupt requests are masked (not accepted), and the BANK1 registers (R0_BANK1 to R7_BANK1) are selected. Exception code H'160 is written to the EXPEVT register (bits 11 to 0). The program branches to address (VBR + H'00000100), indicated by the sum of the VBR register contents and offset H'00000100. ",
+		"prefix": "trapa",
+		"body": "\ttrapa\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"TST": {
+		"description": "Test Logical (2 Opperands): This instruction ANDs the contents of general registers Rn and Rm, and sets the T bit if the result is zero. If the result is nonzero, the T bit is cleared. The contents of Rn are not changed. This instruction can be used to AND general register R0 contents with zero-extended 8-bit immediate data, or, in indexed GBR indirect addressing mode, to AND 8-bit memory with 8-bit immediate data. The contents of R0 or the memory are not changed. ",
+		"prefix": "tst",
+		"body": "\ttst\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"XOR": {
+		"description": "Exclusive OR Logical (2 Opperands): This instruction exclusively ORs the contents of general registers Rn and Rm, and stores the result in Rn. This instruction can be used to exclusively OR register R0 contents with zero-extended 8-bit immediate data, or, in indexed GBR indirect addressing mode, to exclusively OR 8-bit memory with 8-bit immediate data. ",
+		"prefix": "xor",
+		"body": "\txor\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"XTRCT": {
+		"description": "Extract (2 Opperands): This instruction extracts the middle 32 bits from the 64-bit contents of linked general registers Rm and Rn, and stores the result in Rn. MSB Rm Rn Rn MSB LSB LSB ",
+		"prefix": "xtrct",
+		"body": "\txtrct\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"BSR": {
+		"description": "Branch to Subroutine (2 Opperands): This instruction branches to address (PC + 4 + displacement × 2), and stores address (PC + 4) in PR. The PC source value is the BSR instruction address. As the 12-bit displacement is multiplied by two after sign-extension, the branch destination can be located in the range from – 4096 to +4094 bytes from the BSR instruction. If the branch destination cannot be reached, this branch can be performed with a JSR instruction. ",
+		"prefix": "bsr",
+		"body": "\tbsr\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"BSRF": {
+		"description": "Branch to Subroutine Far (2 Opperands): This instruction branches to address (PC + 4 + Rn), and stores address (PC + 4) in PR. The PC source value is the BSRF instruction address. The branch destination address is the result of adding the 32-bit contents of general register Rn to PC + 4. ",
+		"prefix": "bsrf",
+		"body": "\tbsrf\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"JSR": {
+		"description": "Jump to Subroutine (2 Opperands): This instruction makes a delayed branch to the subroutine procedure at the specified address after execution of the following instruction. Return address (PC + 4) is saved in PR, and a branch is made to the address indicated by general register Rn. JSR is used in combination with RTS for subroutine procedure calls. ",
+		"prefix": "jsr",
+		"body": "\tjsr\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"STC": {
+		"description": "Store Control Register (2 Opperands): This instruction stores the control register SR in the destination. ",
+		"prefix": "stc",
+		"body": "\tstc\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"STS": {
+		"description": "Store from FPU System Register (2 Opperands): This instruction stores FPU system register FPUL or FPSCR in the destination. ",
+		"prefix": "sts",
+		"body": "\tsts\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FABS": {
+		"description": "Floating-point Absolute Value (2 Opperands): This instruction clears the most significant bit of the contents of floating-point register FRn/DRn to 0, and stores the result in FRn/DRn. The cause and flag fields in FPSCR are not updated. ",
+		"prefix": "fabs",
+		"body": "\tfabs\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FADD": {
+		"description": "Floating-point ADD (2 Opperands): When FPSCR.PR = 0: Arithmetically adds the two single-precision floating-point numbers in FRn and FRm, and stores the result in FRn. When FPSCR.PR = 1: Arithmetically adds the two double-precision floating-point numbers in DRn and DRm, and stores the result in DRn. When FPSCR.enable.I is set, an FPU exception trap is generated regardless of whether or not an exception has occurred. When FPSCR.enable.O/U is set, FPU exception traps are generated on actual generation by the FPU exception source and on the satisfaction of certain special conditions that apply to this the instruction. These special conditions are described in the remaining parts of this section. When an exception occurs, correct exception information is reflected in FPSCR.cause and FPSCR.flag, and FRn or DRn is not updated. Appropriate processing should therefore be performed by software. ",
+		"prefix": "fadd",
+		"body": "\tfadd\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FCMP": {
+		"description": "Floating-point Compare (2 Opperands): 1. When FPSCR.PR = 0: Arithmetically compares the two single-precision floating-point numbers in FRn and FRm, and stores 1 in the T bit if they are equal, or 0 otherwise. 2. When FPSCR.PR = 1: Arithmetically compares the two double-precision floating-point numbers in DRn and DRm, and stores 1 in the T bit if they are equal, or 0 otherwise. 3. When FPSCR.PR = 0: Arithmetically compares the two single-precision floating-point numbers in FRn and FRm, and stores 1 in the T bit if FRn > FRm, or 0 otherwise. 4. When FPSCR.PR = 1: Arithmetically compares the two double-precision floating-point numbers in DRn and DRm, and stores 1 in the T bit if DRn > DRm, or 0 otherwise. ",
+		"prefix": "fcmp",
+		"body": "\tfcmp\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FCNVDS": {
+		"description": "Floating-point Convert Double to Single Precision (2 Opperands): When FPSCR.PR = 1: This instruction converts the double-precision floating-point number in DRm to a single-precision floating-point number, and stores the result in FPUL. When FPSCR.enable. I is set, an FPU exception trap is generated regardless of whether or not an exception has occurred. When FPSCR.enable.O/U is set, FPU exception traps are generated on actual generation by the FPU exception source and on the satisfaction of certain special conditions that apply to this the instruction. These special conditions are described in the remaining parts of this section. When an exception occurs, correct exception information is reflected in FPSCR.cause and FPSCR.flag, and FPUL is not updated. Appropriate processing should therefore be performed by software. ",
+		"prefix": "fcnvds",
+		"body": "\tfcnvds\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FCNVSD": {
+		"description": "Floating-point Convert Single to Double Precision (2 Opperands): When FPSCR.PR = 1: This instruction converts the single-precision floating-point number in FPUL to a double-precision floating-point number, and stores the result in DRn. ",
+		"prefix": "fcnvsd",
+		"body": "\tfcnvsd\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FDIV": {
+		"description": "Floating-point Divide (2 Opperands): When FPSCR.PR = 0: Arithmetically divides the single-precision floating-point number in FRn by the single-precision floating-point number in FRm, and stores the result in FRn. When FPSCR.PR = 1: Arithmetically divides the double-precision floating-point number in DRn by the double-precision floating-point number in DRm, and stores the result in DRn. When FPSCR.enable.I is set, an FPU exception trap is generated regardless of whether or not an exception has occurred. When FPSCR.enable.O/U is set, FPU exception traps are generated on actual generation by the FPU exception source and on the satisfaction of certain special conditions that apply to this the instruction. These special conditions are described in the remaining parts of this section. When an exception occurs, correct exception information is reflected in FPSCR.cause and FPSCR.flag, and FRn or DRn is not updated. Appropriate processing should therefore be performed by software. ",
+		"prefix": "fdiv",
+		"body": "\tfdiv\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FIPR": {
+		"description": "Floating-point Inner Product (2 Opperands): When FPSCR.PR = 0: This instruction calculates the inner products of the 4- dimensional single-precision floating-point vector indicated by FVn and FVm, and stores the results in FR[n + 3]. The FIPR instruction is intended for speed rather than accuracy, and therefore the results will differ from those obtained by using a combination of FADD and FMUL instructions. The FIPR execution sequence is as follows: 1. Multiplies all terms. The results are 28 bits long. 2. Aligns these results, rounding them to fit within 30 bits. 3. Adds the aligned values. 4. Performs normalization and rounding. Special processing is performed in the following cases: 1. If an input value is an sNaN, an invalid exception is generated. 2. If the input values to be multiplied include a combination of 0 and infinity, an invalid exception is generated. 3. In cases other than the above, if the input values include a qNaN, the result will be a qNaN. 4. In cases other than the above, if the input values include infinity: a. If multiplication results in two or more infinities and the signs are different, an invalid exception will be generated. b. Otherwise, correct infinities will be stored. 5. If the input values do not include an sNaN, qNaN, or infinity, processing is performed in the normal way. When FPSCR.enable.U/I is set, an FPU exception trap is generated regardless of whether or not an exception has occurred. When FPSCR.enable.O is set, FPU exception traps are generated on  actual generation by the FPU exception source and on the satisfaction of certain special conditions that apply to this the instruction. These special conditions are described in the remaining parts of this section. When an exception occurs, correct exception information is reflected in FPSCR.cause and FPSCR.flag, and FR[n+3] is not updated. Appropriate processing should therefore be performed by software. ",
+		"prefix": "fipr",
+		"body": "\tfipr\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FLDI0": {
+		"description": "Floating-point Load Immediate 0.0 (2 Opperands): When FPSCR.PR = 0, this instruction loads floating-point 0.0 (0x00000000) into FRn. ",
+		"prefix": "fldi0",
+		"body": "\tfldi0\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FLDI1": {
+		"description": "Floating-point Load Immediate 1.0 (2 Opperands): When FPSCR.PR = 0, this instruction loads floating-point 1.0 (0x3F800000) into FRn. ",
+		"prefix": "fldi1",
+		"body": "\tfldi1\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FLDS": {
+		"description": "Floating-point Load to System register (2 Opperands): This instruction loads the contents of floating-point register FRm into system register FPUL. ",
+		"prefix": "flds",
+		"body": "\tflds\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FLOAT": {
+		"description": "Floating-point Convert from Integer (2 Opperands): When FPSCR.PR = 0: Taking the contents of FPUL as a 32-bit integer, converts this integer to a single-precision floating-point number and stores the result in FRn. When FPSCR.PR = 1: Taking the contents of FPUL as a 32-bit integer, converts this integer to a double-precision floating-point number and stores the result in DRn. When FPSCR.enable.I = 1 and FPSCR.PR = 0, an FPU exception trap is generated regardless of whether or not an exception has occurred. When an exception occurs, correct exception information is reflected in FPSCR.cause and FPSCR.flag, and FRn is not updated. Appropriate processing should therefore be performed by software. ",
+		"prefix": "float",
+		"body": "\tfloat\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FMAC": {
+		"description": "Floating-point Multiply and Accumulate (2 Opperands): When FPSCR.PR = 0: This instruction arithmetically multiplies the two singleprecision floating-point numbers in FR0 and FRm, arithmetically adds the contents of FRn, and stores the result in FRn. When FPSCR.enable.I is set, an FPU exception trap is generated regardless of whether or not an exception has occurred. When FPSCR.enable.O/U is set, FPU exception traps are generated on actual generation by the FPU exception source and on the satisfaction of certain special conditions that apply to this the instruction. These special conditions are described in the remaining parts of this section. When an exception occurs, correct exception information is reflected in FPSCR.cause and FPSCR.flag, and FRn is not updated. Appropriate processing should therefore be performed by software. ",
+		"prefix": "fmac",
+		"body": "\tfmac\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FMOV": {
+		"description": "Floating-point Move (2 Opperands): 1. This instruction transfers FRm contents to FRn. 2. This instruction transfers DRm contents to DRn. 3. This instruction transfers FRm contents to memory at address indicated by Rn. 4. This instruction transfers DRm contents to memory at address indicated by Rn. 5. This instruction transfers contents of memory at address indicated by Rm to FRn. 6. This instruction transfers contents of memory at address indicated by Rm to DRn. 7. This instruction transfers contents of memory at address indicated by Rm to FRn, and adds 4 to Rm. 8. This instruction transfers contents of memory at address indicated by Rm to DRn, and adds 8 to Rm. 9. This instruction subtracts 4 from Rn, and transfers FRm contents to memory at address indicated by resulting Rn value.  10. This instruction subtracts 8 from Rn, and transfers DRm contents to memory at address indicated by resulting Rn value. 11. This instruction transfers contents of memory at address indicated by (R0 + Rm) to FRn. 12. This instruction transfers contents of memory at address indicated by (R0 + Rm) to DRn. 13. This instruction transfers FRm contents to memory at address indicated by (R0 + Rn). 14. This instruction transfers DRm contents to memory at address indicated by (R0 + Rn). ",
+		"prefix": "fmov",
+		"body": "\tfmov\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FMOV": {
+		"description": "Floating-point Move Extension (2 Opperands): 1. This instruction transfers XDm contents to memory at address indicated by Rn. 2. This instruction transfers contents of memory at address indicated by Rm to XDn. 3. This instruction transfers contents of memory at address indicated by Rm to XDn, and adds 8 to Rm. 4. This instruction subtracts 8 from Rn, and transfers XDm contents to memory at address indicated by resulting Rn value. 5. This instruction transfers contents of memory at address indicated by (R0 + Rm) to XDn. 6. This instruction transfers XDm contents to memory at address indicated by (R0 + Rn). 7. This instruction transfers XDm contents to XDn. 8. This instruction transfers XDm contents to DRn. 9. This instruction transfers DRm contents to XDn.  ",
+		"prefix": "fmov",
+		"body": "\tfmov\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FMUL": {
+		"description": "Floating-point Multiply (2 Opperands): When FPSCR.PR = 0: Arithmetically multiplies the two single-precision floatingpoint numbers in FRn and FRm, and stores the result in FRn. When FPSCR.PR = 1: Arithmetically multiplies the two double-precision floating-point numbers in DRn and DRm, and stores the result in DRn. When FPSCR.enable.I is set, an FPU exception trap is generated regardless of whether or not an exception has occurred. When FPSCR.enable.O/U is set, FPU exception traps are generated on actual generation by the FPU exception source and on the satisfaction of certain special conditions that apply to this the instruction. These special conditions are described in the remaining parts of this section. When an exception occurs, correct exception information is reflected in FPSCR.cause and FPSCR.flag, and FRn or DRn is not updated. Appropriate processing should therefore be performed by software. ",
+		"prefix": "fmul",
+		"body": "\tfmul\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FNEG": {
+		"description": "Floating-point Negate Value (2 Opperands): This instruction inverts the most significant bit (sign bit) of the contents of floatingpoint register FRn/DRn, and stores the result in FRn/DRn. The cause and flag fields in FPSCR are not updated. ",
+		"prefix": "fneg",
+		"body": "\tfneg\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FPCHG": {
+		"description": "Pr-bit Change (2 Opperands): This instruction inverts the PR bit of the floating-point status register FPSCR. The value of this bit selects single-precision or double-precision operation. ",
+		"prefix": "fpchg",
+		"body": "\tfpchg\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FRCHG": {
+		"description": "FR-bit Change (2 Opperands): This instruction inverts the FR bit in floating-point register FPSCR. When the FR bit in FPSCR is changed, FR0 to FR15 in FPR0_BANK0 to FPR15_BANK0 and FPR0_BANK1 to FPR15_BANK1 become XR0 to XR15, and XR0 to XR15 become FR0 to FR15. When FPSCR.FR = 0, FPR0_BANK0 to FPR15_BANK0 correspond to FR0 to FR15, and FPR0_BANK1 to FPR15_BANK1 correspond to XR0 to XR15. When FPSCR.FR = 1, FPR0_BANK1 to FPR15_BANK1 correspond to FR0 to FR15, and FPR0_BANK0 to FPR15_BANK0 correspond to XR0 to XR15. ",
+		"prefix": "frchg",
+		"body": "\tfrchg\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FSCA": {
+		"description": "Floating Point Sine And Cosine Approximate (2 Opperands): This instruction calculates the sine and cosine approximations of FPUL (absolute error is within ±2^–21) as single-precision floating point values, and places the values of the sine and cosine in FRn and FR[n + 1], respectively. Since this instruction is an approximate operation instruction, an imprecision exception is always required (even if the input is a 0, the result is imprecise). When FPSCR.enable.I is set, an FPU exception trap is generated. When an exception occurs, correct exception information is reflected in FPSCR.cause and FPSCR.flag, and FRn and FR[n + 1] is not updated. Appropriate processing should therefore be performed by software. ",
+		"prefix": "fsca",
+		"body": "\tfsca\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FSCHG": {
+		"description": "Sz-bit Change (2 Opperands): This instruction inverts the SZ bit of the floating-point status register FPSCR. Changing the value of the SZ bit in FPSCR switches the amount of data for transfer by the FMOV instruction between one single-precision data and a pair of single-precision data. When FPSCR.SZ = 0, an FMOV instruction transfers a single-precision number. When FPSCR.SZ = 1, the FMOV instruction transfers a pair of single-precision numbers. ",
+		"prefix": "fschg",
+		"body": "\tfschg\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FSQRT": {
+		"description": "Floating-point Square Root (2 Opperands): When FPSCR.PR = 0: Finds the arithmetical square root of the single-precision floating-point number in FRn, and stores the result in FRn. When FPSCR.PR = 1: Finds the arithmetical square root of the double-precision floating-point number in DRn, and stores the result in DRn. When FPSCR.enable.I is set, an FPU exception trap is generated regardless of whether or not an exception has occurred. When an exception occurs, correct exception information is reflected in FPSCR.cause and FPSCR.flag, and FRn or DRn is not updated. Appropriate processing should therefore be performed by software. ",
+		"prefix": "fsqrt",
+		"body": "\tfsqrt\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FSRRA": {
+		"description": "Floating Point Square Reciprocal Approximate (2 Opperands): This instruction takes the approximate inverse of the arithmetic square root (absolute error is within ±2^–21) of the single-precision floating-point in FRn and writes the result to FRn. Since the this instruction operates by approximation, an imprecision exception is required when the input is a normalized value. In other cases, the instruction does not require an imprecision exception. When FPSCR.enable.I is set, an FPU exception trap is generated. When an exception occurs, correct exception information is reflected in FPSCR.cause and FPSCR.flag, and FRn is not updated. Appropriate processing should therefore be performed by software. ",
+		"prefix": "fsrra",
+		"body": "\tfsrra\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FSTS": {
+		"description": "Floating-point Store System Register (2 Opperands): This instruction transfers the contents of system register FPUL to floating-point register FRn. ",
+		"prefix": "fsts",
+		"body": "\tfsts\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FSUB": {
+		"description": "Floating-point Subtract (2 Opperands): When FPSCR.PR = 0: Arithmetically subtracts the single-precision floating-point number in FRm from the single-precision floating-point number in FRn, and stores the result in FRn. When FPSCR.PR = 1: Arithmetically subtracts the double-precision floating-point number in DRm from the double-precision floating-point number in DRn, and stores the result in DRn. When FPSCR.enable.I is set, an FPU exception trap is generated regardless of whether or not an exception has occurred. When FPSCR.enable.O/U is set, FPU exception traps are generated on actual generation by the FPU exception source and on the satisfaction of certain special conditions that apply to this the instruction. These special conditions are described in the remaining parts of this section. When an exception occurs, correct exception information is reflected in FPSCR.cause and FPSCR.flag, and FRn or DRn is not updated. Appropriate processing should therefore be performed by software. ",
+		"prefix": "fsub",
+		"body": "\tfsub\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FTRC": {
+		"description": "Floating-point Truncate and Convert to integer (2 Opperands): When FPSCR.PR = 0: Converts the single-precision floating-point number in FRm to a 32-bit integer, and stores the result in FPUL. When FPSCR.PR = 1: Converts the double-precision floating-point number in DRm to a 32-bit integer, and stores the result in FPUL. The rounding mode is always truncation. ",
+		"prefix": "ftrc",
+		"body": "\tftrc\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	},
+	"FTRV": {
+		"description": "Floating-point Transform Vector (2 Opperands): When FPSCR.PR = 0: This instruction takes the contents of floating-point registers XF0 to XF15 indicated by XMTRX as a 4-row × 4-column matrix, takes the contents of floatingpoint registers FR[n] to FR[n + 3] indicated by FVn as a 4-dimensional vector, multiplies the array by the vector, and stores the results in FV[n]. XMTRX FVn FVn XF[0] XF[4] XF[8] XF[12] FR[n] FR[n] XF[1] XF[5] XF[9] XF[13] × FR[n+1] → FR[n+1] XF[2] XF[6] XF[10] XF[14] FR[n+2] FR[n+2] XF[3] XF[7] XF[11] XF[15] FR[n+3] FR[n+3] The FTRV instruction is intended for speed rather than accuracy, and therefore the results will differ from those obtained by using a combination of FADD and FMUL instructions. The FTRV execution sequence is as follows: 1. Multiplies all terms. The results are 28 bits long. 2. Aligns these results, rounding them to fit within 30 bits. 3. Adds the aligned values. 4. Performs normalization and rounding. Special processing is performed in the following cases: 1. If an input value is an sNaN, an invalid exception is generated. 2. If the input values to be multiplied include a combination of 0 and infinity, an invalid ",
+		"prefix": "ftrv",
+		"body": "\tftrv\t${1|r,@r,@r-|}${2|0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15|},\tr0"
+	}
+}

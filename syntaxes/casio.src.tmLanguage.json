@@ -1,0 +1,533 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"scopeName": "source.casio.src",
+	"name": "source",
+	"patterns": [
+		{ "include": "#line" }
+	],
+	"repository": {
+		"line": {
+			"match": "^([^;]+)?(;.*)?",
+			"captures": {
+				"1": { "patterns": [ { "include": "#label" } ] },
+				"2": { "patterns": [ { "include": "#comments" } ] }
+			}
+		},
+		"comments": {
+			"match": ";(?:.*?(\\\\&\\w*'?))?.*",
+			"captures": {
+				"0": { "name": "comment.line.asm" },
+				"1": { "name": "support.function.asm" }
+			}
+		},
+		"label": {
+			"match": "(?i)(?:((?:[A-Z_$]\\w*)?\\\\&?\\w+'?:?|[A-Z_$]\\w*:?|(\\W+)(?:[A-Z_$]\\w*:|(?:[A-Z_$]\\w*)?\\\\&?\\w+'?:))(.+)?)?(.+)?",
+			"captures": {
+				"1": { "name": "support.function.asm" },
+				"2": { "name": "invalid.illegal" },
+				"3": { "patterns": [ { "include": "#instructions" } ] },
+				"4": { "patterns": [ { "include": "#no-label-instructions" } ] }
+			}
+		},
+		"instructions": {
+			"match": "(?i)(?:(?:\\s+|\\s*[^A-Z_\\\\$\\s].*?(?:[^\\d]|\\s+))(CLRMAC|CLR[ST]|NOP|RT[ES]|SET[ST]|SLEEP|(?:BRAF|BSRF|CMP/P[LZ]|DT|LDTLB|MOVT|ROTC?[LR]|SHA[LR]|SHLL16|SHLL[28]?|SHLR16|SHLR[28]?|TAS\\.B)(.+)?|(?:B[FT](?:/S)?|(?:BRA|BSR)(?!F))(.+)?|(?:JMP|JSR|PREF)(.+)?|(?:SETRC|TRAPA)(.+)?|(?:AND|X?OR|TST)(.+)?|(?:ADD[CV]|CMP/(?:G[ET]|H[IS]|STR)|DIV0[SU]|DIV1|DMUL[SU]\\.L|EXT[US]\\.[BW]|MUL\\.L|MUL[SU](?:\\.W)?|NEGC?|NOT|SH[AL]D|SUB[CV]?|SWAP\\.[BW]|XTRCT)(.+)?|ADD(.+)?|CMP/EQ(.+)?|LDC(.+)?|LDS(.+)?|MAC(.+)?|MOVA(?:\\.L)?(.+)?|MOV(.+)?|STC(.+)?|STS(.+)?|(\\..*)))?(\\s+[A-Z_\\\\$].*)?.*",
+			"captures": {
+				"0":  { "name": "invalid.illegal" },
+				"1":  { "name": "keyword.other.asm.mnemonic" },
+				"2":  { "patterns": [ { "include": "#register-instruction"			} ] },
+				"3":  { "patterns": [ { "include": "#label-instruction"				} ] },
+				"4":  { "patterns": [ { "include": "#pointer-instruction"			} ] },
+				"5":  { "patterns": [ { "include": "#constant-instruction"			} ] },
+				"6":  { "patterns": [ { "include": "#logic-instruction"				} ] },
+				"7":  { "patterns": [ { "include": "#register-register-instruction"	} ] },
+				"8":  { "patterns": [ { "include": "#add-instruction"				} ] },
+				"9":  { "patterns": [ { "include": "#cmp/eq-instruction"			} ] },
+				"10": { "patterns": [ { "include": "#ldc-instruction"				} ] },
+				"11": { "patterns": [ { "include": "#lds-instruction"				} ] },
+				"12": { "patterns": [ { "include": "#mac-instruction"				} ] },
+				"13": { "patterns": [ { "include": "#mova-instruction"				} ] },
+				"14": { "patterns": [ { "include": "#mov-instruction"				} ] },
+				"15": { "patterns": [ { "include": "#stc-instruction"				} ] },
+				"16": { "patterns": [ { "include": "#sts-instruction"				} ] },
+				"17": { "patterns": [ { "include": "#preprocessor-instructions"		} ] },
+				"18": { "patterns": [ { "include": "#macro"							} ] }
+			}
+		},
+		"preprocessor-instructions": {
+			"match": "(?i)(\\.(.*?)(?:ASSIGN(.+)?|DATA(.+)?|DEFINE(.+)?|EQU(.+)?|AELIF(.+)?|AELSE(.+)?|AERROR.*|ALIMIT.*|AEND[IRW]|AIF(?:DEF)?(.+)?|AREPEAT(.+)?|AWHILE(.+)?))?.*",
+			"captures": {
+				"0":  { "name": "invalid.illegal" },
+				"1":  { "name": "keyword.control.asm" },
+				"2":  { "name": "invalid.illegal" },
+				"3":  { "patterns": [ { "include": "#.assign-instruction"			} ] },
+				"4":  { "patterns": [ { "include": "#.data-instruction"				} ] },
+				"5":  { "name": "string.quoted.double.asm" },
+				"6":  { "patterns": [ { "include": "#.equ-instruction"				} ] },
+				"7":  { "name": "support.function.asm" },
+				"8":  { "name": "support.function.asm" },
+				"9":  { "name": "support.function.asm" },
+				"10": { "name": "support.function.asm" },
+				"11": { "name": "meta.preprocessor.string" }
+			}
+		},
+		"no-label-instructions": {
+			"match": "(?i)(.*?\\s+(\\.(?:ENDM|ALIGN(.+)?|CPU(.+)?|(?:(?:EX|IM)PORT|END)(.+)?|GLOBAL(.+)?|MACRO(.+)?|ORG(.+)?|SECTION(.+)?)))?(.+)?",
+			"captures": {
+				"1":  { "name": "invalid.illegal" },
+				"2":  { "name": "keyword.control.asm" },
+				"3":  { "patterns": [ { "include": "#.align-instruction"			} ] },
+				"4":  { "patterns": [ { "include": "#.cpu-instruction"				} ] },
+				"5":  { "patterns": [ { "include": "#label-instruction"				} ] },
+				"6":  { "patterns": [ { "include": "#.global-instruction"			} ] },
+				"7":  { "patterns": [ { "include": "#.macro-instruction"			} ] },
+				"8":  { "patterns": [ { "include": "#.org-instruction"				} ] },
+				"9":  { "patterns": [ { "include": "#.section-instruction"			} ] },
+				"10": { "patterns": [ { "include": "#instructions"					} ] }
+			}
+		},
+		"label-instruction": {
+			"match": "(.*?\\s.*?((?:\\w+)?\\\\&?\\w+'?|\\w+))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "support.function.asm" },
+				"3": { "name": "invalid.illegal" }
+			}
+		},
+		"register-instruction": {
+			"match": "(?i)(.*?\\s.*?(r.*))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "patterns": [ { "include": "#register" } ] },
+				"3": { "name": "invalid.illegal" }
+			}
+		},
+		"pointer-instruction": {
+			"match": "(?i)(.*?\\s.*?(@.*))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "patterns": [ { "include": "#pointer" } ] },
+				"3": { "name": "invalid.illegal" }
+			}
+		},
+		"constant-instruction": {
+			"match": "(?i)(.*?\\s.*?(#.*))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "patterns": [ { "include": "#hashtag-constant" } ] },
+				"3": { "name": "invalid.illegal" }
+			}
+		},
+		"logic-instruction": {
+			"match": "(?i)(?<B>\\.B)?(?:(\\S*\\s.*?)(?:([#\\\\][^,]*)(?:,(.*?(?(<B>)(@.*)|(r0)))?)?|(?(<B>)$|(r.*))))?(.+)?",
+			"captures": {
+				"1": { "name": "keyword.other.asm.mnemonic" },
+				"2": { "name": "invalid.illegal" },
+				"3": { "patterns": [ { "include": "#hashtag-constant" } ] },
+				"4": { "name": "invalid.illegal" },
+				"5": { "patterns": [ { "include": "#pointer-GBR" } ] },
+				"6": { "name": "support.variable.asm" },
+				"7": { "patterns": [ { "include": "#register-register" } ] },
+				"8": { "name": "invalid.illegal" }
+			}
+		},
+		"register-register-instruction": {
+			"match": "(?i)(.*?\\s.*?(r.*))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "patterns": [ { "include": "#register-register" } ] },
+				"3": { "name": "invalid.illegal" }
+			}
+		},
+		"add-instruction": {
+			"match": "(?i)(?:(?:(\\S*\\s.*?)(?:(r[^,]*)|([#\\\\][^,]*)))(?:,(.*?(r.*))?)?)?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "patterns": [ { "include": "#register" } ] },
+				"3": { "patterns": [ { "include": "#hashtag-constant" } ] },
+				"4": { "name": "invalid.illegal" },
+				"5": { "patterns": [ { "include": "#register" } ] },
+				"6": { "name": "invalid.illegal" }
+			}
+		},
+		"cmp/eq-instruction": {
+			"match": "(?i)(?:(\\S*\\s.*?)(?:(r.*)|([#\\\\][^,]*)(?:,(.*?(r0))?)?))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "patterns": [ { "include": "#register-register" } ] },
+				"3": { "patterns": [ { "include": "#hashtag-constant" } ] },
+				"4": { "name": "invalid.illegal" },
+				"5": { "name": "support.variable.asm" },
+				"6": { "name": "invalid.illegal" }
+			}
+		},
+		"ldc-instruction": {
+			"match": "(?i)(?:(?:(\\.L(\\S*\\s.*?(@[^,]*))?)|(\\S*\\s.*?(r[^,]*)))(?:,(.+)?)?)?(.+)?",
+			"captures": {
+				"1": { "name": "keyword.other.asm.mnemonic" },
+				"2": { "name": "invalid.illegal" },
+				"3": { "patterns": [ { "include": "#pointer-increment" } ] },
+				"4": { "name": "invalid.illegal" },
+				"5": { "patterns": [ { "include": "#register" } ] },
+				"6": { "patterns": [ { "include": "#control-register" } ] },
+				"7": { "name": "invalid.illegal" }
+			}
+		},
+		"lds-instruction": {
+			"match": "(?i)(?:(?:(\\.L(\\S*\\s.*?(@[^,]*))?)|(\\S*\\s.*?(r[^,]*)))(?:,(.+)?)?)?(.+)?",
+			"captures": {
+				"1": { "name": "keyword.other.asm.mnemonic" },
+				"2": { "name": "invalid.illegal" },
+				"3": { "patterns": [ { "include": "#pointer-increment" } ] },
+				"4": { "name": "invalid.illegal" },
+				"5": { "patterns": [ { "include": "#register" } ] },
+				"6": { "patterns": [ { "include": "#system-register" } ] },
+				"7": { "name": "invalid.illegal" }
+			}
+		},
+		"mac-instruction": {
+			"match": "(?i)(.*?(\\.[WL])?(\\S*\\s+([^,]+)?(,(.+)?)))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "keyword.other.asm.mnemonic" },
+				"3": { "name": "invalid.illegal" },
+				"4": { "patterns": [ { "include": "#pointer-increment" } ] },
+				"5": { "name": "entity.name.label" },
+				"7": { "patterns": [ { "include": "#pointer-increment" } ] },
+				"8": { "name": "invalid.illegal" }
+			}
+		},
+		"mova-instruction": {
+			"match": "(?i)(?:(\\S*\\s)([^,]*,[^,]*)(?:,(.*?(R0))?)?)?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "patterns": [ { "include": "#pointer-PC" } ] },
+				"3": { "name": "invalid.illegal" },
+				"4": { "name": "support.variable.asm" },
+				"5": { "name": "invalid.illegal" }
+			}
+		},
+		"mov-instruction": {
+			"match": "(?i)(?:(?:.*?(\\.(?:(?<B>B)|(?<W>W)|(?<L>L))?))?\\S*\\s+(?:(?:.*?(?:(?:(?<C>#[^,]*)|(@[^(]*\\(.*?(?:,.*?(?:(?(<L>)(?<PC>PC))|(?<GBR>GBR)|(?<Disp>\\d{1,10}))|(?<R0>R0).*?,)?[^)]*\\)[^,]*)|(?<PI>@[^,]*?\\+[^,]*)|(?<P>@[^,]*)|(?<R0>R0[^,]*)|(?<R>R[^,]*)|([A-Z_\\$][^,]*))[^,]*)(,(.*?(?:(#.*)|(@[^(]*\\(.*?[^)]*\\)[^,]*)|(@.*?-.*)|(@.*)|(R0.*)|(R.*)))?)?)))?.*",
+			"captures": {
+				"0":  { "name": "invalid.illegal" },
+				"1":  { "name": "keyword.other.asm.mnemonic" },
+				"5":  { "patterns": [ { "include": "#hashtag-constant" } ] },
+				"6":  { "patterns": [ { "include": "#pointers" } ] },
+				"11": { "patterns": [ { "include": "#pointer-increment" } ] },
+				"12": { "patterns": [ { "include": "#pointer" } ] },
+				"13": { "patterns": [ { "include": "#register-0" } ] },
+				"14": { "patterns": [ { "include": "#register" } ] },
+				"15": { "patterns": [ { "include": "#constant" } ] },
+				"16": { "name": "entity.name.label" },
+				"17": { "name": "invalid.illegal" },
+				"18": { "patterns": [ { "include": "#hashtag-constant" } ] },
+				"19": { "patterns": [ { "include": "#pointers" } ] },
+				"20": { "patterns": [ { "include": "#decrement-pointer" } ] },
+				"21": { "patterns": [ { "include": "#pointer" } ] },
+				"22": { "patterns": [ { "include": "#register-0" } ] },
+				"23": { "patterns": [ { "include": "#register" } ] }
+			}
+		},
+		"stc-instruction": {
+			"match": "(?i)(?<Long>\\.L)?(\\S*\\s([^,]+)?(,(.*?(?(<Long>)(@.*)|(r.*)))?)?)?(.+)?",
+			"captures": {
+				"1": { "name": "keyword.other.asm.mnemonic" },
+				"2": { "name": "invalid.illegal" },
+				"3": { "patterns": [ { "include": "#control-register" } ] },
+				"4": { "name": "entity.name.label" },
+				"5": { "name": "invalid.illegal" },
+				"6": { "patterns": [ { "include": "#decrement-pointer" } ] },
+				"7": { "patterns": [ { "include": "#register" } ] },
+				"8": { "name": "invalid.illegal" }
+			}
+		},
+		"sts-instruction": {
+			"match": "(?i)(?<Long>\\.L)?(\\S*\\s([^,]+)?(,(.*?(?(<Long>)(@.*)|(r.*)))?)?)?(.+)?",
+			"captures": {
+				"1": { "name": "keyword.other.asm.mnemonic" },
+				"2": { "name": "invalid.illegal" },
+				"3": { "patterns": [ { "include": "#system-register" } ] },
+				"4": { "name": "entity.name.label" },
+				"5": { "name": "invalid.illegal" },
+				"6": { "patterns": [ { "include": "#decrement-pointer" } ] },
+				"7": { "patterns": [ { "include": "#register" } ] },
+				"8": { "name": "invalid.illegal" }
+			}
+		},
+		".align-instruction": {
+			"match": "(?i)(.*?\\s.*?(2147483648|1073741824|536870912|268435456|134217728|67108864|33554432|16777216|8388608|4194304|2097152|1048576|524288|262144|131072|65536|32768|16384|8192|4096|2048|1024|512|256|128|64|32|16|[8421]))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "constant.numeric.integer.decimal" },
+				"3": { "name": "invalid.illegal" }
+			}
+		},
+		".assign-instruction": {
+			"match": "(?i)((?:(?<Num>A)|(?<Char>C)).*?\\s.*?((.+)?|(.+)?))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "keyword.control.asm" },
+				"3": { "name": "keyword.control.asm" },
+				"4": { "name": "support.function.asm" },
+				"6": { "name": "invalid.illegal" }
+			}
+		},
+		".cpu-instruction": {
+			"match": "(?i)(.*?\\s.*?(SH([14]|3?DSP|[23]E?)))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "meta.preprocessor.string" },
+				"3": { "name": "meta.preprocessor.numeric" },
+				"4": { "name": "invalid.illegal" }
+			}
+		},
+		".data-instruction": {
+			"match": "(?i)(?:.*?(\\.[BWL])?(?:\\S*\\s+(.+))?)?.*",
+			"captures": {
+				"0": { "name": "invalid.illegal" },
+				"1": { "name": "keyword.control.asm" },
+				"2": { "patterns": [ { "include": "#constant" } ] }
+			}
+		},
+		".equ-instruction": {
+			"match": "(?i)(.*?\\s(.+)?)?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "patterns": [ { "include": "#constant" } ] },
+				"3": { "name": "invalid.illegal" }
+			}
+		},
+		".global-instruction": {
+			"match": "(?i)(.*?\\s.*?(SH([14]|3?DSP|[23]E?)))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "meta.preprocessor.string" },
+				"3": { "name": "meta.preprocessor.numeric" },
+				"4": { "name": "invalid.illegal" }
+			}
+		},
+		".macro-instruction": {
+			"match": "(?i)(.*?\\s.*?([A-Z_$][A-Z0-9_$]*)(.+)?)?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "support.function.asm" },
+				"3": { "patterns": [ { "include": "#macro-arguments" } ] },
+				"4": { "name": "invalid.illegal" }
+			}
+		},
+		".org-instruction": {
+			"match": "(?i)(.*?\\s.*?(H.*))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "patterns": [ { "include": "#constant-hexadecimal" } ] },
+				"3": { "name": "invalid.illegal" }
+			}
+		},
+		".section-instruction": {
+			"match": "(?i)(?:(.*?\\s.*?)(\\w+)(?:(.*?),(?:(.*?)(CODE|DATA|STACK|DUMMY)(?:(.*?),(.*?(?:(LOCATE=)(.*?(H.*))?|(ALIGN=)(.*?(2147483648|1073741824|536870912|268435456|134217728|67108864|33554432|16777216|8388608|4194304|2097152|1048576|524288|262144|131072|65536|32768|16384|8192|4096|2048|1024|512|256|128|64|32|16|8|4))?))?)?)?)?)?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "meta.preprocessor.string" },
+				"3": { "name": "invalid.illegal" },
+				"4": { "name": "invalid.illegal" },
+				"5": { "name": "meta.preprocessor.string" },
+				"6": { "name": "invalid.illegal" },
+				"7": { "name": "invalid.illegal" },
+				"8": { "name": "meta.preprocessor.string" },
+				"9": { "name": "invalid.illegal" },
+				"10": { "patterns": [ { "include": "#constant-hexadecimal" } ] },
+				"11": { "name": "meta.preprocessor.string" },
+				"12": { "name": "invalid.illegal" },
+				"13": { "name": "meta.preprocessor.numeric.decimal" },
+				"14": { "name": "invalid.illegal" }
+			}
+		},
+		"register": {
+			"match": "(?i)(.*?(r(.*?(1[0-5]|\\d))?))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "support.variable.asm" },
+				"3": { "name": "invalid.illegal" },
+				"4": { "name": "support.variable.asm" },
+				"5": { "name": "invalid.illegal" }
+			}
+		},
+		"register-0": {
+			"match": "(?i)(.*?(r(.*?(0))?))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "support.variable.asm" },
+				"3": { "name": "invalid.illegal" },
+				"4": { "name": "support.variable.asm" },
+				"5": { "name": "invalid.illegal" }
+			}
+		},
+		"register-register": {
+			"match": "(?i)(r[^,]*)(?:(.*?),(.*?(r.*))?)?(.+)?",
+			"captures": {
+				"1": { "patterns": [ { "include": "#register" } ] },
+				"2": { "name": "invalid.illegal" },
+				"3": { "name": "invalid.illegal" },
+				"4": { "patterns": [ { "include": "#register" } ] },
+				"5": { "name": "invalid.illegal" }
+			}
+		},
+		"control-register": {
+			"match": "(?i)(?:.*?([GV]BR|MOD|R[ES]|(?:(R.*?)_BANK)|SPC|SS?R))?.*",
+			"captures": {
+				"0": { "name": "invalid.illegal" },
+				"1": { "name": "support.variable.asm" },
+				"2": { "patterns": [ { "include": "#register" } ] }
+			}
+		},
+		"system-register": {
+			"match": "(?i)(?:.*?(FPSCR|FPUL|MAC[HL]|PR|DSR|A0|[XY][01]))?.*",
+			"captures": {
+				"0": { "name": "invalid.illegal" },
+				"1": { "name": "support.variable.asm" }
+			}
+		},
+		"pointer": {
+			"match": "(?i)(?:.*?(@).*?(R.*)?)?.*",
+			"captures": {
+				"0": { "name": "invalid.illegal" },
+				"1": { "name": "entity.name.label" },
+				"2": { "patterns": [ { "include": "#register" } ] }
+			}
+		},
+		"pointer-increment": {
+			"match": "(?i)(?:.*?(@).*?((R(.+)?15(.+)?\\+)|(R[^+]*)(.+)?\\+)?)?.*",
+			"captures": {
+				"0": { "name": "invalid.illegal" },
+				"1": { "name": "entity.name.label" },
+				"2": { "name": "support.variable.asm" },
+				"3": { "name": "support.class.asm" },
+				"4": { "name": "invalid.illegal" },
+				"5": { "name": "invalid.illegal" },
+				"6": { "patterns": [ { "include": "#register" } ] },
+				"7": { "name": "invalid.illegal" }
+			}
+		},
+		"decrement-pointer": {
+			"match": "(?i)(?:.*?(@).*?((-(.+)?R(.+)?15)|-(.+)?(R[^+]*))?)?.*",
+			"captures": {
+				"0": { "name": "invalid.illegal" },
+				"1": { "name": "entity.name.label" },
+				"2": { "name": "support.variable.asm" },
+				"3": { "name": "support.class.asm" },
+				"4": { "name": "invalid.illegal" },
+				"5": { "name": "invalid.illegal" },
+				"6": { "name": "invalid.illegal" },
+				"7": { "patterns": [ { "include": "#register" } ] }
+			}
+		},
+		"pointer-GBR": {
+			"match": "(?i)(?:(.*?)(@)(.*?)\\((.*?)(r0)(.*?),(.*?)(GBR)(.*?)\\))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "support.variable.asm" },
+				"3": { "name": "invalid.illegal" },
+				"4": { "name": "invalid.illegal" },
+				"5": { "name": "support.variable.asm" },
+				"6": { "name": "invalid.illegal" },
+				"7": { "name": "invalid.illegal" },
+				"8": { "name": "support.variable.asm" },
+				"9": { "name": "invalid.illegal" },
+				"10": { "name": "invalid.illegal" }
+			}
+		},
+		"pointer-PC": {
+			"match": "(?i)(?:(.*?)@(.*?)\\((.*?)([^,)]*)(.*?),(.*?)(PC)(.*?)\\))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "invalid.illegal" },
+				"3": { "name": "invalid.illegal" },
+				"4": { "name": "support.variable.asm" },
+				"5": { "name": "invalid.illegal" },
+				"6": { "name": "invalid.illegal" },
+				"7": { "name": "support.variable.asm" },
+				"8": { "name": "invalid.illegal" },
+				"9": { "name": "invalid.illegal" }
+			}
+		},
+		"pointers": {
+			"match": "(?i)(?:(@)[^(]*(\\()(?:.*?(?:(?<R0>R0)|(?<Constant>\\d{1,10}|[A-Z_\\$][^,]*)))?[^,]*(,)(?:.*?(?:(?(<R0>)(R[^)]*)|(?:(GBR)|(PC)|(R[^)]*)))))?[^)]*(\\))[^,]*)?.*",
+			"captures": {
+				"0":  { "name": "invalid.illegal" },
+				"1":  { "name": "entity.name.label" },
+				"2":  { "name": "entity.name.label" },
+				"3":  { "patterns": [ { "include": "#register-0" } ] },
+				"4":  { "patterns": [ { "include": "#constant" } ] },
+				"5":  { "name": "entity.name.label" },
+				"6":  { "patterns": [ { "include": "#register" } ] },
+				"7":  { "name": "support.variable.asm" },
+				"8":  { "name": "support.variable.asm" },
+				"9":  { "patterns": [ { "include": "#register" } ] },
+				"10": { "name": "entity.name.label" }
+			}
+		},
+		"string": {
+			"match": "(?i)(.*?(?:(#)(.+)?|(\\\\&?\\w+'?)))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "constant.numeric.integer" },
+				"3": { "patterns": [ { "include": "#constant" } ] },
+				"4": { "name": "meta.preprocessor.numeric" },
+				"5": { "name": "invalid.illegal" }
+			}
+		},
+		"hashtag-constant": {
+			"match": "(?i)(.*?(?:(#)(.+)?|(\\\\&?\\w+'?)))?(.+)?",
+			"captures": {
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "constant.numeric.integer" },
+				"3": { "patterns": [ { "include": "#constant" } ] },
+				"4": { "name": "meta.preprocessor.numeric" },
+				"5": { "name": "invalid.illegal" }
+			}
+		},
+		"constant": {
+			"match": "(?i)(?:.*?(?:(H.*?'.*)|((?:L')?-?\\d{1,10})|([A-Z_$][A-Z0-9_$]*|\\\\&?\\w+'?)))?.*",
+			"captures": {
+				"0": { "name": "invalid.illegal" },
+				"1": { "patterns": [ { "include": "#constant-hexadecimal" } ] },
+				"2": { "name": "constant.numeric.integer.decimal" },
+				"3": { "name": "support.function.asm" }
+			}
+		},
+		"constant-hexadecimal": {
+			"match": "(?i)H'(.*?)-?(.*?)\\h{0,8}",
+			"captures": {
+				"0": { "name": "constant.numeric.integer.hexadecimal" },
+				"1": { "name": "invalid.illegal" },
+				"2": { "name": "invalid.illegal" }
+			}
+		},
+		"constant-decimal": {
+			"match": "(?i)((?:D')?(.*?)-?(.*?)\\d{0,10})?(.+)?",
+			"captures": {
+				"1": { "name": "constant.numeric.integer.decimal" },
+				"2": { "name": "invalid.illegal" },
+				"3": { "name": "invalid.illegal" },
+				"4": { "name": "invalid.illegal" }
+			}
+		},
+		"macro": {
+			"match": "(?i).*?([A-Z_\\\\$][A-Z0-9_\\\\&$]*)(\\s.*)?",
+			"captures": {
+				"0": { "name": "invalid.illegal" },
+				"1": { "name": "keyword.control.asm" },
+				"2": { "patterns": [ { "include": "#macro-arguments" } ] }
+			}
+		},
+		"macro-arguments": {
+			"match": "(?i)(?:.*?\\s.*?([A-Z0-9_'\"\\\\&$]+)[^,]*(,)?)(.+)?",
+			"captures": {
+				"0": { "name": "invalid.illegal" },
+				"1": { "name": "string.quoted.double.asm" },
+				"2": { "name": "entity.name.label" },
+				"3": { "patterns": [ { "include": "#macro-arguments" } ] }
+			}
+		}
+	}
+}

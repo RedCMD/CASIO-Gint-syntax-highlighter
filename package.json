@@ -1,0 +1,119 @@
+{
+	"name": "casio-asm-syntax",
+	"displayName": "CASIOs/Gint ASM Syntax Hightligher",
+	"description": "Syntax Highlighting for CASIO's & Gint's SuperH Assembly Language",
+	"icon": "images/CASIO-logo-icon.png",
+	"version": "3.1.6",
+	"publisher": "RedCMD",
+	"engines": {
+		"vscode": "^1.47.0"
+	},
+	"keywords": [
+		"superh",
+		"fx9860"
+	],
+	"categories": [
+		"Programming Languages"
+	],
+	"contributes": {
+		"languages": [
+			{
+				"id": ".asm",
+				"aliases": [
+					"CASIO.SuperH.Assembly"
+				],
+				"extensions": [
+					".asm"
+				],
+				"configuration": "./language-configuration.json"
+			},
+			{
+				"id": ".src",
+				"aliases": [
+					"CASIO.SuperH.SDK.Source"
+				],
+				"extensions": [
+					".src"
+				],
+				"configuration": "./language-configuration.json"
+			},
+			{
+				"id": ".lst",
+				"aliases": [
+					"CASIO.SuperH.SDK.Debug"
+				],
+				"extensions": [
+					".lst"
+				],
+				"configuration": "./language-configuration.json"
+			},
+			{
+				"id": ".fsy",
+				"aliases": [
+					"CASIO.SuperH.SDK.Functions"
+				],
+				"extensions": [
+					".fsy"
+				],
+				"configuration": "./language-configuration.json"
+			},
+			{
+				"id": ".s",
+				"aliases": [
+					"CASIO.SuperH.Gint.Source"
+				],
+				"extensions": [
+					".s"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": ".asm",
+				"scopeName": "source.casio.asm",
+				"path": "./syntaxes/casio.asm.tmLanguage.json"
+			},
+			{
+				"language": ".src",
+				"scopeName": "source.casio.src",
+				"path": "./syntaxes/casio.src.tmLanguage.json"
+			},
+			{
+				"language": ".lst",
+				"scopeName": "source.casio.lst",
+				"path": "./syntaxes/casio.lst.tmLanguage.json"
+			},
+			{
+				"language": ".fsy",
+				"scopeName": "source.casio.fsy",
+				"path": "./syntaxes/casio.fsy.tmLanguage.json"
+			},
+			{
+				"language": ".s",
+				"scopeName": "source.casio.s",
+				"path": "./syntaxes/casio.s.tmLanguage.json"
+			}
+		],
+		"snippets": [
+			{
+				"language": ".asm",
+				"path": "./snippets/asm-instructions.json"
+			},
+			{
+				"language": ".src",
+				"path": "./snippets/asm-instructions.json"
+			},
+			{
+				"language": ".s",
+				"path": "./snippets/asm-instructions.json"
+			}
+		]
+	},
+	"__metadata": {
+		"id": "4a516aab-d0c8-4498-a476-77727b4198cc",
+		"publisherId": "6d229866-9775-4c10-9f86-f22eaa70eb66",
+		"publisherDisplayName": "RedCMD",
+		"installedTimestamp": 1628063056014
+	}
+}

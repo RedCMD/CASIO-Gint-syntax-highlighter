@@ -1,0 +1,132 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"scopeName": "source.casio.asm",
+	"name": "assemably",
+	"patterns": [
+		{ "include": "#comment-line" },
+		{ "include": "#comment-block" },
+		{ "include": "#double-quote" },
+		{ "include": "#directive" },
+		{ "include": "#directive-c" },
+		{ "include": "#directive-argument" },
+		{ "include": "#label-label" },
+		{ "include": "#instruction" },
+		{ "include": "#register" },
+		{ "include": "#hexadecimal" },
+		{ "include": "#decimal" },
+		{ "include": "#comment-c-code" },
+		{ "include": "#section" },
+		{ "include": "#immediate" },
+		{ "include": "#label" },
+		{ "include": "#separator" },
+		{ "include": "#invalid" }
+	],
+	"repository": {
+		"comment": {
+			"name": "comment.line.asm",
+			"match": "."
+		},
+		"comment-block": {
+			"name": "comment.block.asm",
+			"begin": "/\\*",
+			"end": "\\*/"
+		},
+		"comment-line": {
+			"match": "^\\s*(?:#+|\\*)\\s.*$|;(.*)$|\\s#\\s.+$|^\\s+\\+.+$",
+			"captures": {
+				"0": { "name": "comment.line.asm" },
+				"1": { "patterns": [ { "include": "#comment-preprocessor-variable" }, { "include": "#comment" } ] }
+			}
+		},
+		"comment-preprocessor-variable": {
+			"name": "invalid.illegal",
+			"match": "\\\\&\\w*'?"
+		},
+		"comment-c-code": {
+			"name": "comment.line.asm",
+			"match": "^\\s+\\w+\\.\\w+\\s+.*$"
+		},
+		"decimal": {
+			"match": "(?i)#?-?(?<=\\W|^)\\d+|#(\\\\&?\\w+'?)|#imm|disp(?=\\W)|#(?=\\S+(?:[,\\s$;]|/\\*))",
+			"captures": {
+				"0": { "name": "constant.numeric.integer.decimal" },
+				"1": { "name": "support.function.asm" }
+			}
+		},
+		"directive": {
+			"name": "keyword.control.asm",
+			"match": "(?i)(?:(?<=^\\S*\\s*)\\.(?:AELIF|AELSE|AERROR|AEND[IRW]|AIF(?:DEF)?|ALIGN|ALIMIT|AREPEAT|ASSIGN[AC]|AWHILE|BYTE|CPU|DATA|DEFINE|ENDM?|EQU|(?:(?:EX|IM)PORT)|GLOBAL|LONG|MACRO|ORG|SECTION|SPACE|TEXT|WORD|ZERO)|(?<=[\\s^])\\.(?:DATA(?:\\.[BLW])?|RES\\.L|SDATA))(?=[\\s;$])"
+		},
+		"directive-argument": {
+			"name": "keyword.control.asm",
+			"match": "(?i)(?<=\\s)(?:EQ|NE|[GL][ET])(?=\\s|;)"
+		},
+		"directive-c": {
+			"name": "keyword.control.asm",
+			"match": "(?i)^\\s*#\\s*(?:(?:UN)?DEFINE|(?:END)?IF|IFN?DEF|INCLUDE|IMPORT)(?=[\\s;/])"
+		},
+		"double-quote": {
+			"match": "\"(.+?)\"",
+			"captures": {
+				"0": { "name": "string.quoted.double" },
+				"1": { "patterns": [ { "include": "#hexadecimal" }, { "include": "#preprocessor-variable" }, { "include": "#string" } ] }
+			}
+		},
+		"hexadecimal": {
+			"match": "(?i)#?(?:H'|0x)?-?(?<=\\W|^|0x)\\h+(?!\\w)|H'(\\\\&?\\w+'?)",
+			"captures": {
+				"0": { "name": "constant.numeric.integer.hexadecimal" },
+				"1": { "name": "support.function.asm" }
+			}
+		},
+		"instruction": {
+			"name": "keyword.other.asm.mnemonic",
+			"match": "(?i)\\s(?:ADD[CV]?|(?:AND|X?OR|TAS|TST)(?:\\.B)?|B[FT](?:[/.]S)?|BRAF?|BSRF?|CLR(?:MAC|[ST])|CMP\\s*/\\s*(?:EQ|G[ET]|H[IS]|P[LZ]|STR)|DIV0[SU]|DIV1|DMUL[SU]\\.L|DT|EXT[SU]\\.[BW]|F(?:ABS|ADD|CMP/(?:EQ|GT)|DIV|LDI[01]|LDS|LOAT|MAC|MOV(?:\\.S)?|MUL|NEG|SQRT|SUB|TRC|STS)|ICBI|JMP|JSR|LDC(?:\\.L)?|LDR[ES]|LDS(?:\\.L)?|LDTLB|MAC(?:\\.[LW])?|MOV(?:\\.[BLW]|(?:[CU]?A|CO|LI)\\.L|[TA])?|MUL\\.L|MUL[SU]\\.W|NEGC?|NO[PT]|OCB(?:[IP]|WB)|PREFI?|ROTC[LR]|ROT[LR]|RT[ES]|SETRC|SET[ST]|SHA[DLR]|SHL[DL]|SHLL(?:[28]|16)?|SHLR(?:[28]|16)?|SLEEP|STC(?:\\.L)?|STS(?:\\.L)?|SUB[CV]?|SWAP(?:\\.[BLW])?|SYNCO|TRAPA|XTRCT)(?=\\s|;)"
+		},
+		"invalid": {
+			"name": "invalid.illegal",
+			"match": "."
+		},
+		"label": {
+			"name": "support.function.asm",
+			"match": "(?i)(?<=\\W)(?:\\.|_+\\$)?(?:\\w+|\\\\&?\\w+'?)+:?(?!\\w)"
+		},
+		"label-label": {
+			"name": "support.function.asm",
+			"match": "(?i)^(?<WhiteSpace>\\s+)?\\.?(?:\\w+|\\\\&?\\w+'?)+(?(<WhiteSpace>):|:?)"
+		},
+		"register": {
+			"match": "(?i)(?<=\\s|[,(])((@)(-r15|r15\\+)|(@)-?R(?:1[0-5]|\\d|[nm])\\+?|F?R1[0-5]|R[0-7]_BANK|F?R\\d|F?R[nm]|A0|[XY][01]|FPUL|FPSCR|[DGV]BR|P[CR]|MAC[HL]?|MOD|PTE[HL]|SGR|SPC|[DS]?SR|R[CES]|RF[01]|[MQST])(?=\\s|[,;)])",
+			"captures": {
+				"1": { "name": "support.variable.asm" },
+				"2": { "name": "meta.embedded" },
+				"3": { "name": "support.class.asm" },
+				"4": { "name": "meta.embedded" }
+			}
+		},
+		"preprocessor-variable": {
+			"name": "support.function.asm",
+			"match": "\\\\&?\\w+'?"
+		},
+		"separator": {
+			"name": "meta.embedded",
+			"match": "[,*@&()|/^<>+=~-]|\\\\$"
+		},
+		"section": {
+			"match": "(?<=\\W)((?:\\.\\w+){2,})",
+			"captures": {
+				"1": { "patterns": [ { "include": "#label" } ] }
+			}
+		},
+		"immediate": {
+			"match": "<(.+)>",
+			"captures": {
+				"1": { "patterns": [ { "include": "#hexadecimal" }, { "include": "#decimal" }, { "include": "#label" } ] }
+			}
+		},
+		"string": {
+			"name": "string.quoted.double",
+			"match": "[^+]"
+		}
+	}
+}

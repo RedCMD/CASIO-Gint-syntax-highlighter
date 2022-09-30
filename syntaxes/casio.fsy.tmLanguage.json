@@ -1,0 +1,37 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"scopeName": "source.casio.fsy",
+	"name": "functions",
+	"patterns": [
+		{ "include": "#comment" },
+		{ "include": "#label" },
+		{ "include": "#directive" },
+		{ "include": "#hexadecimal" },
+		{ "include": "#invalid" }
+	],
+	"repository": {
+		"comment": {
+			"name": "comment.line.asm",
+			"match": ";.*$"
+		},
+		"label": {
+			"name": "support.function.asm",
+			"match": "_\\w+:?"
+		},
+		"directive": {
+			"name": "keyword.control.asm",
+			"match": "(?i)\\.(?:EQU|EXPORT|END)\\b"
+		},
+		"hexadecimal": {
+			"match": "(?i)H'\\h{1,8}",
+			"captures": {
+				"0": { "name": "constant.numeric.integer.hexadecimal" },
+				"1": { "name": "support.function.asm" }
+			}
+		},
+		"invalid": {
+			"name": "invalid.illegal",
+			"match": "."
+		}
+	}
+}
