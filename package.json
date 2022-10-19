@@ -1,22 +1,71 @@
 {
 	"name": "casio-asm-syntax",
-	"displayName": "CASIOs/Gint ASM Syntax Hightligher",
+	"displayName": "CASIO/Gint Syntax Hightligher",
 	"description": "Syntax Highlighting for CASIO's & Gint's SuperH Assembly Language",
-	"icon": "images/CASIO-logo-icon.png",
-	"version": "3.1.6",
 	"publisher": "RedCMD",
+	"version": "3.1.6",
 	"engines": {
 		"vscode": "^1.47.0"
 	},
+	"icon": "images/CASIO-logo-icon.png",
+	"extensionDependencies": [
+		"pokey.parse-tree"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/RedCMD/CASIO-Gint-syntax-highlighter.git"
+	},
 	"keywords": [
+		"gint",
+		"casio",
 		"superh",
 		"fx9860"
 	],
 	"categories": [
-		"Programming Languages"
+		"Programming Languages",
+		"Snippets"
 	],
+	"activationEvents": [
+		"onLanguage:.asm",
+		"onLanguage:.src",
+		"onLanguage:.lst",
+		"onLanguage:.fsy",
+		"onLanguage:.s",
+		"onLanguage:casio",
+		"onLanguage:g1a",
+		"onCommand:casio.g1a_to_src"
+	],
+	"main": "./out/extension.js",
 	"contributes": {
 		"languages": [
+			{
+				"id": "casio",
+				"aliases": [
+					"CASIO.SuperH"
+				],
+				"extensions": [
+					".src"
+				],
+				"configuration": "./language-configuration.json",
+				"icon": {
+					"dark": "images/CASIO-logo-icon.png",
+					"light": "images/CASIO-logo-icon.png"
+				}
+			},
+			{
+				"id": "g1a",
+				"aliases": [
+					"G1A"
+				],
+				"extensions": [
+					".G1A"
+				],
+				"configuration": "./language-configuration.json",
+				"icon": {
+					"dark": "images/CASIO-logo-icon.png",
+					"light": "images/CASIO-logo-icon.png"
+				}
+			},
 			{
 				"id": ".asm",
 				"aliases": [
@@ -70,6 +119,11 @@
 		],
 		"grammars": [
 			{
+				"language": "casio",
+				"scopeName": "source.casio",
+				"path": "./syntaxes/casio.tmLanguage.json"
+			},
+			{
 				"language": ".asm",
 				"scopeName": "source.casio.asm",
 				"path": "./syntaxes/casio.asm.tmLanguage.json"
@@ -108,7 +162,37 @@
 				"language": ".s",
 				"path": "./snippets/asm-instructions.json"
 			}
-		]
+		],
+		"commands": [
+			{
+				"command": "casio.g1a_to_src",
+				"title": "Save as source assembly file",
+				"category": "casio"
+			}
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"command": "casio.g1a_to_src",
+					"when": "resourceLangId == g1a",
+					"group": "casio"
+				}
+			],
+			"editor/context": [
+				{
+					"command": "casio.g1a_to_src",
+					"when": "resourceLangId == g1a",
+					"group": "casio"
+				}
+			],
+			"editor/title/context": [
+				{
+					"command": "casio.g1a_to_src",
+					"when": "resourceLangId == g1a",
+					"group": "casio"
+				}
+			]
+		}
 	},
 	"__metadata": {
 		"id": "4a516aab-d0c8-4498-a476-77727b4198cc",
