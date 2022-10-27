@@ -121,7 +121,10 @@
 			{
 				"language": "casio",
 				"scopeName": "source.casio",
-				"path": "./syntaxes/casio.tmLanguage.json"
+				"path": "./syntaxes/casio.tmLanguage.json",
+				"balancedBracketScopes": [
+					"support.function.preprocessor.asm"
+				]
 			},
 			{
 				"language": ".asm",

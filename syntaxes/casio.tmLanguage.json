@@ -4,12 +4,13 @@
 	"name": "CASIO SuperH FX-9860G SDK",
 	"patterns": [
 		{ "include": "#comment" },
-		{ "include": "#label" },
+		{ "include": "#label-address" },
 		{ "include": "#instruction" },
 		{ "include": "#directive" },
 		{ "include": "#register" },
 		{ "include": "#numeric" },
-		{ "include": "#preprocessor-variable" }
+		{ "include": "#preprocessor-variable" },
+		{ "include": "#label" }
 	],
 	"repository": {
 		"comment": {
@@ -23,9 +24,41 @@
 			],
 			"name": "comment.asm"
 		},
+		"label-address": {
+			"patterns": [
+				{
+					"match": "(?<=^(?<WhiteSpace>\\s+)?)(?=[\\\\_a-zA-Z$])(?>[\\w$]++|\\\\&?\\w+')++(?(<WhiteSpace>):|:?)",
+					"name": "support.function.preprocessor.asm"
+				},
+				{
+					"match": "(?<=^(?<WhiteSpace>\\s+)?)(?=[\\\\_a-zA-Z$])(?>[\\w$]++|\\\\&?\\w+'?)++(?(<WhiteSpace>):|:?)",
+					"name": "support.function.asm"
+				},
+				{
+					"match": "(?<=^(?<WhiteSpace>\\s+)?)\\?[\\w$]{1,16}(?(<WhiteSpace>):|:?)",
+					"name": "support.function.asm"
+				},
+				{
+					"match": "\\b_$$\\d{5}\\b",
+					"name": "invalid.illegal.asm"
+				}
+			]
+		},
 		"label": {
-			"match": "(?<=^(?<WhiteSpace>\\s+)?)(?>\\w++|\\\\&?\\w+'?)++(?(<WhiteSpace>):|:?)|\\b_\\w+\\b",
-			"name": "support.function.asm"
+			"patterns": [
+				{
+					"match": "\\?[\\w$]{1,16}",
+					"name": "support.function.asm"
+				},
+				{
+					"match": "\\$[$\\w]+",
+					"name": "support.function.asm"
+				},
+				{
+					"match": "\\b[_a-zA-Z][$\\w]+\\b",
+					"name": "support.function.asm"
+				}
+			]
 		},
 		"instruction": {
 			"match": "(?<=\\s)(?i:ADD[CV]?|(?>AND|X?OR|TAS|TST)(?>\\.B)?|B[FT](?>[/.]S)?|BRAF?|BSRF?|CLR(?>MAC|[ST])|CMP\\s*/\\s*(?>EQ|G[ET]|H[IS]|P[LZ]|STR)|DIV0[SU]|DIV1|DMUL[SU]\\.L|DT|EXT[SU]\\.[BW]|F(?>ABS|ADD|CMP/(?>EQ|GT)|DIV|LDI[01]|LDS|LOAT|MAC|MOV(?>\\.S)?|MUL|NEG|SQRT|SUB|TRC|STS)|ICBI|JMP|JSR|LDC(?>\\.L)?|LDR[ES]|LDS(?>\\.L)?|LDTLB|MAC(?>\\.[LW])?|MOV(?>\\.[BLW]|(?>[CU]?A|CO|LI)\\.L|[TA])?|MUL\\.L|MUL[SU]\\.W|NEGC?|NO[PT]|OCB(?>[IP]|WB)|PREFI?|ROTC[LR]|ROT[LR]|RT[ES]|SETRC|SET[ST]|SHA[DLR]|SHL[DL]|SHLL(?>[28]|16)?|SHLR(?>[28]|16)?|SLEEP|STC(?>\\.L)?|STS(?>\\.L)?|SUB[CV]?|SWAP(?>\\.[BLW])?|SYNCO|TRAPA|XTRCT)(?=\\s+(?!,)|;|$)",
@@ -100,8 +133,16 @@
 			"name": "constant.numeric.binary"
 		},
 		"preprocessor-variable": {
-			"name": "support.function.asm",
-			"match": "\\\\&?\\w+'?"
+			"patterns": [
+				{
+					"match": "\\\\&?\\w+'",
+					"name": "support.function.preprocessor.asm"
+				},
+				{
+					"match": "\\\\&?\\w+'?",
+					"name": "support.function.asm"
+				}
+			]
 		}
 	}
 }
