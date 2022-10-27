@@ -1,5 +1,5 @@
-const vscode = require("vscode");
-const extension = require("./extension.js");
+const vscode = require("vscode")
+const extension = require("./extension.js")
 
 
 
@@ -7,21 +7,19 @@ const CodeLensProvider = {
 	async provideCodeLenses(document, token) {
 		const { getTree } = await extension.parseTreeExtension.activate()
 		const tree = getTree(document)
+		const language = tree.getLanguage()
+		const query = language.query(
+			`(source_file (label) @label)` +
+			`(preprocessor .(["if" (macro)]) (label) @label)`
+		)
+		const queryCaptures = query.captures(tree.rootNode)
 
 		const codeLenses = []
 
-		this.getLabelDefinitions(tree.rootNode, codeLenses, document)
+		for (const capture of queryCaptures) {
+			const node = capture.node
 
-		// vscode.window.showInformationMessage(JSON.stringify(codeLenses))
-		return codeLenses
-	},
-	async getLabelDefinitions(rootNode, codeLenses, document) {
-		for (const node of rootNode.namedChildren) {
-			if (node.type == 'preprocessor')
-				if (node.firstChild.type == 'macro' || node.firstChild.type == 'if')
-					this.getLabelDefinitions(node, codeLenses, document)
-
-			if (node.type != 'label')
+			if (/^\$[0-9A-F]{5}:$/.test(node.text))
 				continue
 
 			const range = extension.nodeToVscodeRange(node)
@@ -30,26 +28,42 @@ const CodeLensProvider = {
 			codeLens.text = node.text
 			codeLenses.push(codeLens)
 		}
+
+		// vscode.window.showInformationMessage(JSON.stringify(codeLenses))
+		return codeLenses
 	},
 	async resolveCodeLens(codeLens, token) {
+		const text = codeLens.text.replace(/:$|\n/, '')
 		const document = codeLens.document
-		const uri = document.uri
 
 		const { getTree } = await extension.parseTreeExtension.activate()
 		const tree = getTree(document)
+		const language = tree.getLanguage()
+		const query = language.query(
+			`(` +
+			`	[` +
+			`		(assembly					(label) @label)` +
+			`		(aif_arguments				(label) @label)` +
+			`		(preprocessor .(directive)	(label) @label)` +
+			`	]` +
+			`	(#eq? @label "${text}")` +
+			`)`
+		)
+		// const query = language.query(
+		// 	`(assembly					(label) @label (#eq? @label "${text}"))` +
+		// 	`(aif_arguments				(label) @label (#eq? @label "${text}"))` +
+		// 	`(preprocessor .(directive) (label) @label (#eq? @label "${text}"))`
+		// )
+		const queryCaptures = query.captures(tree.rootNode)
 
-		const text = codeLens.text.replace(/:$/, '')
-		const line = codeLens.range.start.line
 
 		const locations = []
+		const uri = document.uri
 
-
-		for (const rootNode of tree.rootNode.namedChildren) {
-			// if (rootNode.startIndex > endIndex)
-			// 	break
-			for (const node of rootNode.namedChildren) {
-				this.getAllChildren(node, locations, text, uri, line)
-			}
+		for (const capture of queryCaptures) {
+			const range = extension.nodeToVscodeRange(capture.node)
+			const location = new vscode.Location(uri, range)
+			locations.push(location)
 		}
 
 
@@ -67,25 +81,6 @@ const CodeLensProvider = {
 
 		// vscode.window.showInformationMessage(JSON.stringify(codeLens))
 		return codeLens
-	},
-	async getAllChildren(node, locations, text, uri, line) {
-		if (node.startPosition.row >= line)
-			return
-		
-		for (const childNode of node.namedChildren)
-			this.getAllChildren(childNode, locations, text, uri, line)
-
-		if (node.parent.type == 'preprocessor')
-			return
-
-		if (node.type != 'label')
-			return
-		if (node.text != text)
-			return
-
-		const range = extension.nodeToVscodeRange(node)
-		const location = new vscode.Location(uri, range)
-		locations.push(location)
 	}
 }
 
