@@ -5,6 +5,7 @@ module.exports = grammar({
 		$.comment,
 	],
 	conflicts: $ => [
+		[$.label_colon, $.assembly,],
 		[$.assembly,],
 		[$.source_file,],
 		[$.preprocessor,],
@@ -13,8 +14,9 @@ module.exports = grammar({
 		[$.pointer_offset, $.pointer_decrement, $.pointer_increment, $.pointer,],
 		[$.pointer_increment, $.pointer,],
 		[$.register, $._label,],
+		[$.symbol,],
 	],
-	word: $ => $._word,
+	// word: $ => $._word,
 
 	rules: {
 		source_file: $ => seq(
@@ -22,7 +24,10 @@ module.exports = grammar({
 			optional(
 				seq(
 					repeat1($._whitespace),
-					'.END',
+					alias(
+						'.END',
+						$.END,
+					),
 					repeat($._whitespace),
 					optional($.comment),
 					repeat(
@@ -38,47 +43,8 @@ module.exports = grammar({
 			),
 		),
 
-		_line: $ => seq(
-			optional(
-				choice(
-					$.label,
-					seq(
-						repeat($._whitespace),
-						alias(
-							$.label_colon,
-							$.label,
-						),
-					),
-					// prec.right(2,
-					// 	$.label,
-					// ),
-					// prec.left(1,
-					// 	seq(
-					// 		repeat($._whitespace),
-					// 		alias(
-					// 			$.label_colon,
-					// 			$.label,
-					// 		),
-					// 	),
-					// ),
-				),
-			),
-			optional(
-				seq(
-					repeat1($._whitespace),
-					choice(
-						$.assembly,
-						$.preprocessor,
-					),
-				),
-			),
-			repeat($._whitespace),
-			optional($.comment),
-			/\r?\n/,
-		),
-
 		register_0: $ => /[rR]0/,
-		register: $ => /[rR](1[0-5]|\d)|R[nm]/,
+		register: $ => /[rR](1[0-5]|\d)|[sS][pP]|R[nm]/,
 		constant: $ => choice(
 			seq(
 				'#',
@@ -121,6 +87,81 @@ module.exports = grammar({
 		numeric_32bit: $ => /\d+/,
 		numeric_8bit: $ => /25[0-5]|2[0-4]\d|1?\d\d?/,
 		numeric_4bit: $ => /1[0-5]|\d/,
+
+
+		label_colon: $ => seq(
+			$._label,
+			':',
+		),
+		label: $ => $._label,
+		_label: $ => seq(
+			choice(
+				$._word_start,
+				$.symbol,
+			),
+			repeat(
+				choice(
+					alias(
+						$._word,
+						'char_label',
+					),
+					$.symbol,
+				),
+			),
+		),
+		symbol: $ => seq(
+			'\\',
+			optional('&'),
+			alias(
+				seq(
+					$._word_start,
+					repeat($._word),
+				),
+				'char',
+			),
+			optional('\''),
+		),
+		_word: $ => /[\w$]+/,
+		_word_start: $ => /[\\_a-zA-Z$?]/,
+
+		_line: $ => seq(
+			optional(
+				choice(
+					seq(
+						repeat($._whitespace),
+						alias(
+							$.label_colon,
+							$.label,
+						),
+					),
+					$.label,
+					// prec.right(2,
+					// 	$.label,
+					// ),
+					// prec.left(1,
+					// 	seq(
+					// 		repeat($._whitespace),
+					// 		alias(
+					// 			$.label_colon,
+					// 			$.label,
+					// 		),
+					// 	),
+					// ),
+				),
+			),
+			optional(
+				seq(
+					repeat1($._whitespace),
+					choice(
+						$.assembly,
+						$.preprocessor,
+					),
+				),
+			),
+			repeat($._whitespace),
+			optional($.comment),
+			/\r?\n/,
+		),
 
 
 		_aif: $ => seq(
@@ -187,7 +228,7 @@ module.exports = grammar({
 		_macro: $ => seq(
 			alias(
 				'.MACRO',
-				'macro',
+				$.macro,
 			),
 			seq(
 				repeat1($._whitespace),
@@ -250,7 +291,7 @@ module.exports = grammar({
 			seq(
 				alias(
 					/\.\w*(\.[BbLlWw])?/,
-					'preprocessor',
+					$.directive,
 				),
 				optional(
 					seq(
@@ -269,12 +310,12 @@ module.exports = grammar({
 			),
 		),
 
-
 		assembly: $ => seq(
-			alias(
-				/[A-Za-z]+(\.\w|\/\w+|\w+)?/,
-				'instruction',
-			),
+			// alias(
+			// 	/[A-Za-z]+(\.\w|\/\w+|\w+)?/,
+			// 	$.instruction,
+			// ),
+			$.instruction,
 			optional(
 				seq(
 					repeat1($._whitespace),
@@ -378,60 +419,9 @@ module.exports = grammar({
 		),
 
 
-		label: $ => $._label,
-		_label: $ => repeat1(
-			choice(
-				alias(
-					$._word,
-					'char_label',
-				),
-				$.symbol,
-				// seq(
-				// 	'\\',
-				// 	optional('&'),
-				// 	alias(
-				// 		$._word,
-				// 		'char',
-				// 	),
-				// 	optional('\''),
-				// ),
-			),
-		),
-		label_colon: $ => seq(
-			$._label,
-			':',
-		),
-		// label_colon: $ => seq(
-		// 	alias(
-		// 		token(
-		// 			repeat1(
-		// 				choice(
-		// 					seq(
-		// 						'\\',
-		// 						optional('&'),
-		// 						/\w+/,
-		// 						optional('\''),
-		// 					),
-		// 					/\w+/,
-		// 				),
-		// 			),
-		// 		),
-		// 		'label',
-		// 	),
-		// 	':',
-		// ),
-		symbol: $ => seq(
-			'\\',
-			optional('&'),
-			alias(
-				$._word,
-				'char',
-			),
-			optional('\''),
-		),
 
 		// ERROR: $ => /\.\w+/,
-		_word: $ => /\w+/,
+		instruction: $ => /[A-Za-z]+(\.\w|\/\w+|\w+)?/,
 		// comment: $ => seq(
 		// 	';',
 		// 	repeat(
