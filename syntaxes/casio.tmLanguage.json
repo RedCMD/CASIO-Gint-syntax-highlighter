@@ -8,6 +8,7 @@
 		{ "include": "#instruction" },
 		{ "include": "#directive" },
 		{ "include": "#register" },
+		{ "include": "#operator" },
 		{ "include": "#numeric" },
 		{ "include": "#preprocessor-variable" },
 		{ "include": "#label" }
@@ -61,8 +62,16 @@
 			]
 		},
 		"instruction": {
-			"match": "(?<=\\s)(?i:ADD[CV]?|(?>AND|X?OR|TAS|TST)(?>\\.B)?|B[FT](?>[/.]S)?|BRAF?|BSRF?|CLR(?>MAC|[ST])|CMP\\s*/\\s*(?>EQ|G[ET]|H[IS]|P[LZ]|STR)|DIV0[SU]|DIV1|DMUL[SU]\\.L|DT|EXT[SU]\\.[BW]|F(?>ABS|ADD|CMP/(?>EQ|GT)|DIV|LDI[01]|LDS|LOAT|MAC|MOV(?>\\.S)?|MUL|NEG|SQRT|SUB|TRC|STS)|ICBI|JMP|JSR|LDC(?>\\.L)?|LDR[ES]|LDS(?>\\.L)?|LDTLB|MAC(?>\\.[LW])?|MOV(?>\\.[BLW]|(?>[CU]?A|CO|LI)\\.L|[TA])?|MUL\\.L|MUL[SU]\\.W|NEGC?|NO[PT]|OCB(?>[IP]|WB)|PREFI?|ROTC[LR]|ROT[LR]|RT[ES]|SETRC|SET[ST]|SHA[DLR]|SHL[DL]|SHLL(?>[28]|16)?|SHLR(?>[28]|16)?|SLEEP|STC(?>\\.L)?|STS(?>\\.L)?|SUB[CV]?|SWAP(?>\\.[BLW])?|SYNCO|TRAPA|XTRCT)(?=\\s+(?!,)|;|$)",
-			"name": "keyword.asm"
+			"patterns": [
+				{
+					"match": "(?<=\\s)(?i:ADD[CV]?|(?>AND|X?OR|TAS|TST)(?>\\.B)?|B[FT](?>[/.]S)?|BRAF?|BSRF?|CLR(?>MAC|[ST])|CMP\\s*/\\s*(?>EQ|G[ET]|H[IS]|P[LZ]|STR)|DIV0[SU]|DIV1|DMUL[SU]\\.L|DT|EXT[SU]\\.[BW]|F(?>ABS|ADD|CMP/(?>EQ|GT)|DIV|LDI[01]|LDS|LOAT|MAC|MOV(?>\\.S)?|MUL|NEG|SQRT|SUB|TRC|STS)|ICBI|JMP|JSR|LDC(?>\\.L)?|LDR[ES]|LDS(?>\\.L)?|LDTLB|MAC(?>\\.[LW])?|MOV(?>\\.[BLW]|(?>[CU]?A|CO|LI)\\.L|[TA])?|MUL\\.L|MUL[SU]\\.W|NEGC?|NO[PT]|OCB(?>[IP]|WB)|PREFI?|ROTC[LR]|ROT[LR]|RT[ES]|SETRC|SET[ST]|SHA[DLR]|SHL[DL]|SHLL(?>[28]|16)?|SHLR(?>[28]|16)?|SLEEP|STC(?>\\.L)?|STS(?>\\.L)?|SUB[CV]?|SWAP(?>\\.[BLW])?|SYNCO|TRAPA|XTRCT)(?=\\s+(?!,)|;|$)",
+					"name": "keyword.asm"
+				},
+				{
+					"match": "(?<=(?>^|:)\\s+)[a-zA-Z][a-zA-Z0-9]+(?>[./][a-zA-Z]+)?\\b",
+					"name": "keyword.asm markup.italic.asm"
+				}
+			]
 		},
 		"directive": {
 			"patterns": [
@@ -77,60 +86,120 @@
 			]
 		},
 		"register": {
-			"comment": " R0 to R15, FR0 to FR15, DR0 to DR14 (only even values), XD0 to XD14 (only even values), FV0 to FV12 (only multiples of four), R0_BANK to R7_BANK, SP*, SR, GBR, VBR, MACH, MACL, PR, PC, SSR, SPC, FPUL, FPSCR, MOD, RE, RS, DSR, A0, A0G, A1, A1G, M0, M1, X0, X1, Y0, Y1, XMTRX, DBR, SGR ",
-			"comment": " STARTOF, SIZEOF, HIGH, LOW, HWORD, LWORD, $EVEN, $ODD, $EVEN2, $ODD2 ",
-			"comment": " $ ",
 			"patterns": [
 				{
-					"match": "(?i)(\\br(?>1[0-5]|\\d)\\b)|@\\g<1>\\+?|@-\\g<1>",
+					"comment": "SP == StackPointer == r15",
+					"match": "(?i)\\b((?>F?R(?>1[0-5]|\\d)|SP))\\b|(@)\\s*(?<dec>(-)\\s*)?((?>F?R(?>1[0-5]|\\d)|SP))(?(<dec>)\\b|\\s*(\\+)|\\b)",
+					"captures": {
+						"1": { "name": "variable.asm" },
+						"2": { "name": "keyword.operator.pointer.asm" },
+						"4": { "name": "keyword.operator.decrement.asm" },
+						"5": { "name": "variable.asm" },
+						"6": { "name": "keyword.operator.increment.asm" }
+					}
+				},
+				{
+					"match": "(?i)\\b(?>DR|XD)(?>1[024]|[02468])\\b",
 					"name": "variable.asm"
 				},
 				{
-					"match": "\\b(?i:gbr|pc)\\b",
+					"match": "(?i)\\bFV(?>12|[048])\\b",
 					"name": "variable.asm"
+				},
+				{
+					"match": "(?i)\\bR[0-7]_BANK\\b",
+					"name": "variable.other.constant.asm"
+				},
+				{
+					"match": "(?i)\\b(?>SR|GBR|VBR|MACH|MACL|PR|PC|SSR|SPC|FPUL|FPSCR|MOD|RE|RS|DSR|A0|A0G|A1|A1G|M0|M1|X0|X1|Y0|Y1|XMTRX|DBR|SGR)\\b",
+					"name": "variable.other.constant.asm"
 				}
 			]
 		},
-		"double-quote": {
-			"match": "\"(.+?)\"",
-			"captures": {
-				"0": { "name": "string.quoted.double" },
-				"1": {
-					"patterns": [
-						{ "include": "#hexadecimal" },
-						{ "include": "#preprocessor-variable" },
-						{ "include": "#string" }
-					]
+		"operator": {
+			"patterns": [
+				{
+					"match": "[-+*/]|[~&|~]|<<|>>",
+					"name": "keyword.operator.asm"
+				},
+				{
+					"match": "(?i)\\bSIZEOF\\b",
+					"name": "keyword.operator.sizeof.asm"
+				},
+				{
+					"match": "(?i)\\bSTARTOF\\b",
+					"name": "keyword.operator.alignof.asm"
+				},
+				{
+					"match": "(?i)\\$(?>EVEN|ODD)2?\\b",
+					"name": "keyword.operator.expression.asm"
+				},
+				{
+					"match": "(?i)\\b(?>HIGH|LOW|HWORD|LWORD)\\b",
+					"name": "keyword.operator.new.asm"
 				}
-			}
+			]
 		},
 		"numeric": {
 			"patterns": [
+				{ "include": "#string" },
+				{ "include": "#float" },
 				{ "include": "#hexadecimal" },
 				{ "include": "#decimal" },
 				{ "include": "#octal" },
 				{ "include": "#binary" },
 				{
 					"match": "#imm",
-					"name": "constant.numeric"
+					"name": "constant.numeric.asm"
+				}
+			]
+		},
+		"string": {
+			"begin": "\"",
+			"end": "\"",
+			"name": "string.asm",
+			"applyEndPatternLast": true,
+			"patterns": [
+				{
+					"match": "\"\"",
+					"name": "constant.character.escape.asm"
+				},
+				{
+					"match": "(\")(\")",
+					"captures": {
+						"1": { "name": "constant.character.escape.asm" },
+						"2": { "name": "string.double.quote.asm" }
+					}
+				}
+			]
+		},
+		"float": {
+			"patterns": [
+				{
+					"match": "\\b[Ff]'(?>\\d+\\.?\\d*|\\.\\d+)(?>[SDsd](?>[+-]?\\d\\d?)?)?\\b",
+					"name": "constant.numeric.float.asm"
+				},
+				{
+					"match": "\\b[Hh]'\\h+(?>\\.[SDsd])?\\b",
+					"name": "constant.numeric.hexadecimal.float.asm"
 				}
 			]
 		},
 		"hexadecimal": {
-			"match": "#?H'-?\\h+\\b",
-			"name": "constant.numeric.hexadecimal"
+			"match": "#?[Hh]'-?\\h+\\b",
+			"name": "constant.numeric.hexadecimal.asm"
 		},
 		"decimal": {
-			"match": "#?(?>D')?-?\\b\\d+\\b",
-			"name": "constant.numeric.decimal"
+			"match": "#?(?>[Dd]')?-?\\b\\d+\\b",
+			"name": "constant.numeric.decimal.asm"
 		},
 		"octal": {
-			"match": "#?Q'-?[0-7]+\\b",
-			"name": "constant.numeric.octal"
+			"match": "#?[Qq]'-?[0-7]+\\b",
+			"name": "constant.numeric.octal.asm"
 		},
 		"binary": {
-			"match": "#?B'-?[01]+\\b",
-			"name": "constant.numeric.binary"
+			"match": "#?[Bb]'-?[01]+\\b",
+			"name": "constant.numeric.binary.asm"
 		},
 		"preprocessor-variable": {
 			"patterns": [
