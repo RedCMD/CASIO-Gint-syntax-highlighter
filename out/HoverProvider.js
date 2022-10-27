@@ -12,7 +12,7 @@ const HoverProvider = {
 
 		var markdownString = new vscode.MarkdownString()
 		
-		markdownString.appendCodeblock(node.text, '.asm')
+		markdownString.appendCodeblock(node.text, 'casio')
 		
 		if (node.parent != null)
 			markdownString.appendText(node.parent.type + ' => ')

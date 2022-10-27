@@ -20,6 +20,13 @@ const DiagnosticCollection = require("./DiagnosticCollection.js").DiagnosticColl
 
 
 
+function positionToNodePoint(position) {
+	return {
+		row: position.line,
+		column: position.character
+	}
+}
+
 function nodeToVscodeRange(node) {
 	const startPosition = node.startPosition
 	const endPosition = node.endPosition
@@ -46,7 +53,7 @@ function getNodeAtPosition(rootNode, position) {
 }
 
 
-function subscribeToDocumentChanges(context, callback, Disposable, ...args) {
+async function subscribeToDocumentChanges(context, callback, Disposable, ...args) {
 	context.subscriptions.push(Disposable)
 
 	if (vscode.window.activeTextEditor)
@@ -64,7 +71,7 @@ function subscribeToDocumentChanges(context, callback, Disposable, ...args) {
 				callback(TextDocument, Disposable, ...args)
 		})
 	)
-	
+
 	context.subscriptions.push(
 		vscode.window.onDidChangeActiveTextEditor(editor => {
 			if (editor)
@@ -118,15 +125,15 @@ async function activate(context) {
 	context.subscriptions.push(vscode.commands.registerCommand("casio.g1a_to_src", g1a_to_src))
 
 
-	context.subscriptions.push(vscode.languages.registerHoverProvider(DocumentSelector, HoverProvider)) // mouse hovers
+	// context.subscriptions.push(vscode.languages.registerHoverProvider(DocumentSelector, HoverProvider)) // mouse hovers
 	context.subscriptions.push(vscode.languages.registerCodeLensProvider(DocumentSelector, CodeLensProvider)) // overhead references
 	// context.subscriptions.push(vscode.languages.registerReferenceProvider(DocumentSelector, ReferenceProvider)) // right click => references
-	// context.subscriptions.push(vscode.languages.registerDefinitionProvider(DocumentSelector, DefinitionProvider)) // ctrl+click
+	context.subscriptions.push(vscode.languages.registerDefinitionProvider(DocumentSelector, DefinitionProvider)) // ctrl+click
 	// context.subscriptions.push(vscode.languages.registerCodeActionsProvider(DocumentSelector, CodeActionProvider)) // quick fixes
 	// context.subscriptions.push(vscode.languages.registerCompletionItemProvider(DocumentSelector, CompletionItemProvider)) // intellisense
 	context.subscriptions.push(vscode.languages.registerDocumentSymbolProvider(DocumentSelector, DocumentSymbolProvider)) // breadcrumbs
 	// context.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(DocumentSelector, DocumentFormattingEditProvider)) // right-click => format
-	context.subscriptions.push(vscode.languages.registerDocumentSemanticTokensProvider(DocumentSelector, DocumentSemanticTokensProvider, SemanticTokensLegend)) // syntax highlighting
+	// context.subscriptions.push(vscode.languages.registerDocumentSemanticTokensProvider(DocumentSelector, DocumentSemanticTokensProvider, SemanticTokensLegend)) // syntax highlighting
 
 	subscribeToDocumentChanges(context, DiagnosticCollection, vscode.languages.createDiagnosticCollection("casio")) // squiggle errors
 }
