@@ -73,12 +73,16 @@
 		"instruction": {
 			"patterns": [
 				{
-					"match": "(?<=\\s)(?i:ADD[CV]?|(?>AND|X?OR|TAS|TST)(?>\\.B)?|B[FT](?>[/.]S)?|BRAF?|BSRF?|CLR(?>MAC|[ST])|CMP\\s*/\\s*(?>EQ|G[ET]|H[IS]|P[LZ]|STR)|DIV0[SU]|DIV1|DMUL[SU]\\.L|DT|EXT[SU]\\.[BW]|F(?>ABS|ADD|CMP/(?>EQ|GT)|DIV|LDI[01]|LDS|LOAT|MAC|MOV(?>\\.S)?|MUL|NEG|SQRT|SUB|TRC|STS)|ICBI|JMP|JSR|LDC(?>\\.L)?|LDR[ES]|LDS(?>\\.L)?|LDTLB|MAC(?>\\.[LW])?|MOV(?>\\.[BLW]|(?>[CU]?A|CO|LI)\\.L|[TA])?|MUL\\.L|MUL[SU]\\.W|NEGC?|NO[PT]|OCB(?>[IP]|WB)|PREFI?|ROTC[LR]|ROT[LR]|RT[ES]|SETRC|SET[ST]|SHA[DLR]|SHL[DL]|SHLL(?>[28]|16)?|SHLR(?>[28]|16)?|SLEEP|STC(?>\\.L)?|STS(?>\\.L)?|SUB[CV]?|SWAP(?>\\.[BLW])?|SYNCO|TRAPA|XTRCT)(?=\\s+(?!,)|;|$)",
-					"name": "keyword.asm"
+					"match": "(?i)(?<=\\s)(?>ADD[CV]?|(?>AND|X?OR|TAS|TST)(?>\\.B)?|B[FT](?>/S)?|BRAF?|BSRF?|CLR(?>MAC|S|T)|CMP/(?>EQ|G[ET]|H[IS]|P[LZ]|STR)|DIV0[SU]|DIV1|DMUL[SU]\\.L|DT|EXT[SU]\\.[BW]|ICBI|JMP|JSR|LD[CS](?>\\.L)?|LDR[ES]|LDTLB|MAC(?>\\.[LW])?|MOV(?>\\.[BLW]|A\\.L|T)?|MUL\\.L|MUL[SU]\\.W|NEGC?|NO[PT]|OCB(?>[IP]|WB)|PREFI?|ROTC?[LR]|RT[ES]|SETRC|SET[ST]|SHA[DLR]|SHLD|SHL[LR](?>2|8|16)?|SLEEP|ST[CS](?>\\.L)?|SUB[CV]?|SWAP(?>\\.[BLW])?|SYNCO|TRAPA|XTRCT)(?=\\s+(?!,)|;|$)",
+					"name": "keyword.mnemonic.asm"
 				},
 				{
-					"match": "(?<=(?>^|:)\\s+)[a-zA-Z][a-zA-Z0-9]+(?>[./][a-zA-Z]+)?\\b",
-					"name": "keyword.asm markup.italic.asm"
+					"match": "(?i)(?<=\\s)F(?>ABS|ADD|CMP/(?>EQ|GT)|DIV|LDI[01]|LDS|LOAT|MAC|MOV(?>\\.S)?|MUL|NEG|SQRT|SUB|TRC|STS)(?=\\s+(?!,)|;|$)",
+					"name": "keyword.mnemonic.float.asm"
+				},
+				{
+					"match": "(?<=(?>^|:)\\s+)[a-zA-Z][a-zA-Z0-9]+(?>[./][a-zA-Z]+)?(?=\\s+(?!,)|;|$)",
+					"name": "keyword.mnemonic.unknown.asm markup.italic.asm"
 				}
 			]
 		},
