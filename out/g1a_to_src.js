@@ -2,7 +2,8 @@ const vscode = require("vscode");
 const extension = require("./extension.js");
 const fs = require("fs");
 
-
+// https://bible.planet-casio.com/simlo/chm/v20/fx9860_G1A.htm
+// https://bible.planet-casio.com/yatis/software/g1a.html#casio-header-file-offset-0x000-to-0x020
 
 function g1a_to_src(uri) {
 	const path = uri.fsPath
