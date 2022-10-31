@@ -13,6 +13,9 @@ const DefinitionProvider = {
 			column: position.character
 		}
 		const queryCapturesRef = queryRef.captures(rootNode, point, point)
+		
+		if (token.isCancellationRequested)
+			return
 
 		const locations = []
 		const uri = document.uri
