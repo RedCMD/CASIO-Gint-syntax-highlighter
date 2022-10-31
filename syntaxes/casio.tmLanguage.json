@@ -6,6 +6,7 @@
 		{ "include": "#comment" },
 		{ "include": "#label-address" },
 		{ "include": "#instruction" },
+		{ "include": "#macro" },
 		{ "include": "#directive" },
 		{ "include": "#register" },
 		{ "include": "#operator" },
@@ -15,12 +16,20 @@
 	],
 	"repository": {
 		"comment": {
+			"match": ";.*",
+			"name": "comment.asm"
+		},
+		"comment-macro": {
 			"begin": ";",
 			"end": "$",
 			"patterns": [
 				{
-					"name": "invalid.illegal",
-					"match": "\\\\&\\w*'?"
+					"name": "invalid.illegal.asm",
+					"match": "\\\\&[^']*'?"
+				},
+				{
+					"name": "invalid.illegal.asm",
+					"match": "\\\\[$?_a-zA-Z][$?\\w]*'?"
 				}
 			],
 			"name": "comment.asm"
@@ -71,6 +80,16 @@
 					"match": "(?<=(?>^|:)\\s+)[a-zA-Z][a-zA-Z0-9]+(?>[./][a-zA-Z]+)?\\b",
 					"name": "keyword.asm markup.italic.asm"
 				}
+			]
+		},
+		"macro": {
+			"begin": "(?<=\\s|^)\\.(?i:MACRO)\\b",
+			"end": "(?<=\\s|^)\\.(?i:END)\\b",
+			"captures": { "0": { "name": "keyword.control.macro.asm" } },
+			"contentName": "macro.asm",
+			"patterns": [
+				{ "include": "#comment-macro" },
+				{ "include": "$self" }
 			]
 		},
 		"directive": {
