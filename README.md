@@ -11,7 +11,7 @@ Snippets!
 Ctrl+click definitions on labels  
 Breadcrumbs  
 Basic error detection (SDK only)  
-![example-urcl-code](https://github.com/RedCMD/CASIO-Gint-syntax-highlighter/blob/main/images/example-code.png)  
+![example-urcl-code](https://github.com/RedCMD/CASIO-Gint-syntax-highlighter/blob/main/images/example-code.png?raw=true)  
 
 ## Requirements
 
