@@ -3,7 +3,7 @@
 	"displayName": "CASIO/Gint Syntax Hightligher",
 	"description": "Syntax Highlighting for CASIO's & Gint's SuperH Assembly Language",
 	"publisher": "RedCMD",
-	"version": "4.0.0",
+	"version": "4.0.1",
 	"engines": {
 		"vscode": "^1.47.0"
 	},
