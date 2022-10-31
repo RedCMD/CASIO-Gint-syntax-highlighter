@@ -41,7 +41,7 @@
 			{
 				"id": "casio",
 				"aliases": [
-					"CASIO.SuperH"
+					"CASIO.SuperH.SDK"
 				],
 				"extensions": [
 					".src"
@@ -82,7 +82,6 @@
 					"CASIO.SuperH.SDK.Source"
 				],
 				"extensions": [
-					".src"
 				],
 				"configuration": "./language-configuration.json"
 			},
