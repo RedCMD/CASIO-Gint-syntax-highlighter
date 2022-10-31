@@ -88,7 +88,7 @@
 		},
 		"macro": {
 			"begin": "(?<=\\s|^)\\.(?i:MACRO)\\b",
-			"end": "(?<=\\s|^)\\.(?i:END)\\b",
+			"end": "(?<=\\s|^)\\.(?i:ENDM)\\b",
 			"captures": { "0": { "name": "keyword.control.macro.asm" } },
 			"contentName": "macro.asm",
 			"patterns": [
