@@ -1,5 +1,8 @@
 # Change Log
 
+**4.0.0**
+- +Tree Sitter parser
+
 **3.1.6**
 - +Snippets. Note that the description is pulled directly from the pdf docs (many errors). Yet to customize the snippet operands
 - +Changelog
