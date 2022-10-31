@@ -81,8 +81,7 @@
 				"aliases": [
 					"CASIO.SuperH.SDK.Source"
 				],
-				"extensions": [
-				],
+				"extensions": [],
 				"configuration": "./language-configuration.json"
 			},
 			{
