@@ -57,15 +57,15 @@
 		"label": {
 			"patterns": [
 				{
-					"match": "\\?[\\w$]{1,16}",
+					"match": "\\B\\?[\\w$]{1,16}",
 					"name": "support.function.asm"
 				},
 				{
-					"match": "\\$[$\\w]+",
+					"match": "\\B\\$[$\\w]+",
 					"name": "support.function.asm"
 				},
 				{
-					"match": "\\b[_a-zA-Z][$\\w]+\\b",
+					"match": "\\b[_a-zA-Z][$\\w]+",
 					"name": "support.function.asm"
 				}
 			]
