@@ -113,6 +113,22 @@
 					".s"
 				],
 				"configuration": "./language-configuration.json"
+			},
+			{
+				"id": "casio-basic",
+				"aliases": [
+					"CASIO.Basic",
+					"BIDE"
+				],
+				"extensions": [
+					".bide",
+					".g1m",
+					".casio",
+					".basic",
+					".casio.basic",
+					".cb"
+				],
+				"configuration": "./basic.language-configuration.json"
 			}
 		],
 		"grammars": [
@@ -148,20 +164,25 @@
 				"language": ".s",
 				"scopeName": "source.casio.s",
 				"path": "./syntaxes/casio.s.tmLanguage.json"
+			},
+			{
+				"language": "casio-basic",
+				"scopeName": "source.casio.basic",
+				"path": "./syntaxes/casio.basic.tmLanguage.json"
 			}
 		],
 		"snippets": [
 			{
 				"language": ".asm",
-				"path": "./snippets/asm-instructions.json"
+				"path": "./snippets/asm-instructions.code-snippets"
 			},
 			{
 				"language": ".src",
-				"path": "./snippets/asm-instructions.json"
+				"path": "./snippets/asm-instructions.code-snippets"
 			},
 			{
 				"language": ".s",
-				"path": "./snippets/asm-instructions.json"
+				"path": "./snippets/asm-instructions.code-snippets"
 			}
 		],
 		"commands": [

@@ -1,0 +1,109 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"scopeName": "source.casio.basic",
+	"name": "CASIO BASIC",
+	"patterns": [
+		{ "include": "#comment" },
+		{ "include": "#comment-bide" },
+		{ "include": "#string" },
+		{ "include": "#if-ifend" },
+		{ "include": "#for-next" },
+		{ "include": "#while-whileend" },
+		{ "include": "#do-lpwhile" },
+		{ "include": "#multi-statement" },
+		{ "include": "#number" },
+		{ "include": "#matrix" },
+		{ "include": "#list" },
+		{ "include": "#goto" },
+		{ "include": "#control" },
+		{ "include": "#function" },
+		{ "include": "#command" },
+		{ "include": "#variable" }
+	],
+	"repository": {
+		"comment": {
+			"match": "'[^:]*",
+			"name": "comment.casio.basic"
+		},
+		"comment-bide": {
+			"match": "^#Program name: .*|^#Password: .*",
+			"name": "comment.casio.basic.bide"
+		},
+		"string": {
+			"begin": "\"",
+			"end": "\"|\n",
+			"name": "string.casio.basic",
+			"patterns": [
+				{
+					"name": "constant.character.escape.casio.basic",
+					"match": "\\\\.?"
+				}
+			]
+		},
+		"if-ifend": {
+			"begin": "\\bIf ",
+			"end": "\\bIfEnd\\b",
+			"captures": { "0": { "name": "keyword.control.if.casio.basic" } },
+			"patterns": [
+				{ "include": "$self" }
+			]
+		},
+		"for-next": {
+			"begin": "\\bFor ",
+			"end": "\\bNext\\b",
+			"captures": { "0": { "name": "keyword.control.next.casio.basic" } },
+			"patterns": [ { "include": "$self" } ]
+		},
+		"while-whileend": {
+			"begin": "\\bWhile \\b",
+			"end": "\\bWhileEnd\\b",
+			"captures": { "0": { "name": "keyword.control.while.casio.basic" } },
+			"patterns": [ { "include": "$self" } ]
+		},
+		"do-lpwhile": {
+			"begin": "\\bDo\\b",
+			"end": "\\bLpWhile ",
+			"captures": { "0": { "name": "keyword.control.do.casio.basic" } },
+			"patterns": [ { "include": "$self" } ]
+		},
+		"multi-statement": {
+			"match": ":",
+			"name": "keyword.control.:.casio.basic"
+		},
+		"number": {
+			"match": "\\d+",
+			"name": "constant.numeric.casio.basic"
+		},
+		"matrix": {
+			"match": "Mat (?>Ans|[A-Z])?",
+			"name": "keyword.matrix.casio.basic"
+		},
+		"list": {
+			"match": "List ?(?>[0-9]+|Ans)?",
+			"name": "keyword.list.casio.basic"
+		},
+		"goto": {
+			"match": "(Goto|Lbl) ([A-Z0-9])?",
+			"captures": {
+				"1": { "name": "keyword.control.goto.casio.basic" },
+				"2": { "name": "variable.other.constant" }
+			}
+		},
+		"control": {
+			"match": "Return|Break|Then|Else|To|=>|->|Prog",
+			"name": "keyword.control.casio.basic"
+		},
+		"function": {
+			"match": "[A-Z][A-Za-z]+#?\\(",
+			"name": "support.function.casio.basic"
+		},
+		"command": {
+			"match": "[A-Z][A-Za-z]+",
+			"name": "support.type.casio.basic"
+		},
+		"variable": {
+			"match": "[A-Z]",
+			"name": "variable.casio.basic"
+		}
+	}
+}
