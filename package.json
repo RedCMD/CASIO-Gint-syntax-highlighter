@@ -153,15 +153,15 @@
 		"snippets": [
 			{
 				"language": ".asm",
-				"path": "./snippets/asm-instructions.json"
+				"path": "./snippets/asm-instructions.code-snippets"
 			},
 			{
 				"language": ".src",
-				"path": "./snippets/asm-instructions.json"
+				"path": "./snippets/asm-instructions.code-snippets"
 			},
 			{
 				"language": ".s",
-				"path": "./snippets/asm-instructions.json"
+				"path": "./snippets/asm-instructions.code-snippets"
 			}
 		],
 		"commands": [
