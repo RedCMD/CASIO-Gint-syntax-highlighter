@@ -24,10 +24,10 @@ const DocumentSymbolProvider = {
 			for (let index = 0; index < node.namedChildCount; index++)
 				this.getAllChildren(node.namedChild(index), symbolsChildren)
 		else
-			for (const childNode of node.namedChildren)
-				this.getAllChildren(childNode, symbolsChildren)
-			// for (let index = 0; index < node.childCount; index++)
-			// 	this.getAllChildren(node.child(index), symbolsChildren)
+			// for (const childNode of node.namedChildren)
+			// 	this.getAllChildren(childNode, symbolsChildren)
+			for (let index = 0; index < node.childCount; index++)
+				this.getAllChildren(node.child(index), symbolsChildren)
 
 
 		const range = extension.nodeToVscodeRange(node)

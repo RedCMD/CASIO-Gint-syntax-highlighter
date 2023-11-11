@@ -27,7 +27,7 @@ const DefinitionProvider = {
 		const query = language.query(
 			`(` +
 			`	[` +
-			`		(source_file (label) @label)` +
+			`		(line (label) @label)` +
 			`		(preprocessor .(["if" (macro)]) (label) @label)` +
 			`	]` +
 			`	(#match? @label "${text.replace(/(?<=\\)|[$?\\]/g, '\\\\$&')}:?")` +
@@ -35,13 +35,28 @@ const DefinitionProvider = {
 		)
 		const queryCaptures = query.captures(rootNode)
 
+		// for (const capture of queryCaptures) {
+		// 	const targetRange = extension.nodeToVscodeRange(capture.node)
+		// 	const locationLink = {
+		// 		originSelectionRange: originSelectionRange,
+		// 		targetUri: uri,
+		// 		targetRange: targetRange,
+		// 		targetSelectionRange: targetRange
+		// 	}
+		// 	locations.push(locationLink)
+		// }
 		for (const capture of queryCaptures) {
-			const targetRange = extension.nodeToVscodeRange(capture.node)
+			const node = capture.node
+			const targetSelectionRange = extension.nodeToVscodeRange(node)
+
+			const nodeSibling = node.nextSibling
+			const targetRange = extension.nodeToVscodeRange(nodeSibling).with(targetSelectionRange.start)
+
 			const locationLink = {
 				originSelectionRange: originSelectionRange,
 				targetUri: uri,
 				targetRange: targetRange,
-				targetSelectionRange: targetRange
+				targetSelectionRange: targetSelectionRange
 			}
 			locations.push(locationLink)
 		}

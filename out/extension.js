@@ -28,6 +28,9 @@ function positionToNodePoint(position) {
 }
 
 function nodeToVscodeRange(node) {
+	if (node == null)
+		return
+
 	const startPosition = node.startPosition
 	const endPosition = node.endPosition
 

@@ -2,9 +2,10 @@ module.exports = grammar({
 	name: "casio",
 	extras: $ => [
 		// $._whitespace,
-		$.comment,
+		// $.comment,
 	],
 	conflicts: $ => [
+		[$.line,],
 		[$.label_colon, $.assembly,],
 		[$.assembly,],
 		[$.source_file,],
@@ -20,7 +21,7 @@ module.exports = grammar({
 
 	rules: {
 		source_file: $ => seq(
-			repeat($._line),
+			repeat($.line),
 			optional(
 				seq(
 					repeat1($._whitespace),
@@ -42,6 +43,105 @@ module.exports = grammar({
 				),
 			),
 		),
+		
+		
+		line: $ => seq(
+			repeat(
+				seq(
+					optional(
+						choice(
+							alias(
+								$.label_colon,
+								$.label,
+							),
+							seq(
+								repeat($._whitespace),
+								alias(
+									$.label_colon,
+									$.label,
+								),
+							),
+							$.label,
+						),
+					),
+					repeat($._whitespace),
+					optional($.comment),
+					/\r?\n/,
+				),
+			),
+			optional(
+				choice(
+					seq(
+						repeat($._whitespace),
+						alias(
+							$.label_colon,
+							$.label,
+						),
+					),
+					$.label,
+				),
+			),
+			optional(
+				seq(
+					repeat1($._whitespace),
+					choice(
+						$.assembly,
+						$.preprocessor,
+					),
+				), 
+			),
+			repeat($._whitespace),
+			optional($.comment),
+			/\r?\n/,
+		),
+		// line: $ => seq(
+		// 	repeat(
+		// 		seq(
+		// 			optional(
+		// 				choice(
+		// 					seq(
+		// 						repeat($._whitespace),
+		// 						alias(
+		// 							$.label_colon,
+		// 							$.label,
+		// 						),
+		// 					),
+		// 					$.label,
+		// 				),
+		// 			),
+		// 			repeat($._whitespace),
+		// 			optional($.comment),
+		// 			/\r?\n/,
+		// 		),
+		// 	),
+		// 	optional(
+		// 		choice(
+		// 			seq(
+		// 				repeat($._whitespace),
+		// 				alias(
+		// 					$.label_colon,
+		// 					$.label,
+		// 				),
+		// 			),
+		// 			$.label,
+		// 		),
+		// 	),
+		// 	optional(
+		// 		seq(
+		// 			repeat1($._whitespace),
+		// 			choice(
+		// 				$.assembly,
+		// 				$.preprocessor,
+		// 			),
+		// 		),
+		// 	),
+		// 	repeat($._whitespace),
+		// 	optional($.comment),
+		// 	alias(
+		// 		/\r?\n/,
+		// 		'r',
+		// 	),
+		// ),
 
 		register_0: $ => /[rR]0/,
 		register: $ => /[rR](1[0-5]|\d)|[sS][pP]|R[nm]/,

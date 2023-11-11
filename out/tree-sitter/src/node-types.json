@@ -153,6 +153,33 @@
     }
   },
   {
+    "type": "line",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "assembly",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "label",
+          "named": true
+        },
+        {
+          "type": "preprocessor",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "numeric_hex",
     "named": true,
     "fields": {},
@@ -351,19 +378,11 @@
           "named": true
         },
         {
-          "type": "assembly",
-          "named": true
-        },
-        {
           "type": "comment",
           "named": true
         },
         {
-          "type": "label",
-          "named": true
-        },
-        {
-          "type": "preprocessor",
+          "type": "line",
           "named": true
         }
       ]
@@ -448,11 +467,11 @@
   },
   {
     "type": "comment",
-    "named": false
+    "named": true
   },
   {
     "type": "comment",
-    "named": true
+    "named": false
   },
   {
     "type": "comparsion",

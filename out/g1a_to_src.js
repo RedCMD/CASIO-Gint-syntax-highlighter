@@ -646,30 +646,31 @@ function assembly(byte, line) {
 				case 0x6: break
 				case 0x7: break
 				case 0x8: return instruction('CMP/EQ', immediate(1, nibble3, nibble4), register(0))
-				case 0x9: return instruction('BT', address(line, nibble3, nibble4))
+				case 0x9: return instruction('BT', address_branch(line, nibble3, nibble4))
 				case 0xA: break
-				case 0xB: return instruction('BF', address(line, nibble3, nibble4))
+				case 0xB: return instruction('BF', address_branch(line, nibble3, nibble4))
 				// case 0xC: return instruction('LDRS', pointer_offset(displacement(1, nibble3, nibble4), 'PC'))
 				case 0xD:
 					// if (line & 1)
 					// 	break
-					return instruction('BT/S', address(line, nibble3, nibble4))
+					return instruction('BT/S', address_branch(line, nibble3, nibble4))
 				// case 0xE: return instruction('LDRE', pointer_offset(displacement(1, nibble3, nibble4), 'PC'))
 				case 0xF:
 					// if (line & 1)
 					// 	break
-					return instruction('BF/S', address(line, nibble3, nibble4))
+					return instruction('BF/S', address_branch(line, nibble3, nibble4))
 			}
 			break
-		case 0x9: return instruction('MOV.W', pointer_offset(displacement(2, nibble3, nibble4), 'PC'), register(nibble2))
+		case 0x9: return instruction('MOV.W', address_mov(line, 2, nibble3, nibble4), register(nibble2))
+		// case 0x9: return instruction('MOV.W', pointer_offset(displacement(2, nibble3, nibble4), 'PC'), register(nibble2))
 		case 0xA:
 			// if (line & 1)
 			// 	break
-			return instruction('BRA', address(line, nibble2, nibble3, nibble4))
+			return instruction('BRA', address_branch(line, nibble2, nibble3, nibble4))
 		case 0xB:
 			// if (line & 1)
 			// 	break
-			return instruction('BSR', address(line, nibble2, nibble3, nibble4))
+			return instruction('BSR', address_branch(line, nibble2, nibble3, nibble4))
 		case 0xC:
 			switch (nibble2) {
 				case 0x0: return instruction('MOV.B', register(0), pointer_offset(displacement(1, nibble3, nibble4), 'GBR'))
@@ -690,7 +691,8 @@ function assembly(byte, line) {
 				case 0xF: return instruction('OR.B', immediate(1, nibble3, nibble4), pointer_offset(register(0), 'GBR'))
 			}
 			break
-		case 0xD: return instruction('MOV.L', pointer_offset(displacement(4, nibble3, nibble4), 'PC'), register(nibble2))
+		case 0xD: return instruction('MOV.L', address_mov(line, 4, nibble3, nibble4), register(nibble2))
+		// case 0xD: return instruction('MOV.L', pointer_offset(displacement(4, nibble3, nibble4), 'PC'), register(nibble2))
 		case 0xE: return instruction('MOV', immediate(1, nibble3, nibble4), register(nibble2))
 		case 0xF:
 			break	// Floating Point instructions
@@ -814,7 +816,7 @@ function displacement(size, number1, number2, number3) {
 	return 'H\'' + (((number1 << 8) + (number2 << 4) + number3) * size).toString(16).toUpperCase().padStart(4, '0')
 }
 
-function address(line, number1, number2, number3) {
+function address_branch(line, number1, number2, number3) {
 	let offset
 	const overflow = number3 == null ? (number2 == null ? (number1 == null ? 0 : 0x80) : 0x80) : 0x800
 
@@ -836,6 +838,24 @@ function address(line, number1, number2, number3) {
 		return '$' + address.toString(16).toUpperCase().padStart(5, '0')
 
 	return immediate(2, number1, number2, number3)
+}
+function address_mov(line, size, number1, number2, number3) {
+	let offset
+
+	if (number1 == null)
+		offset = 0
+	else if (number2 == null)
+		offset = number1
+	else if (number3 == null)
+		offset = (number1 << 4) + number2
+	else offset = (number1 << 8) + (number2 << 4) + number3
+
+	const address = Math.ceil((line + 6 - size + offset * size) / size) * size
+
+	if (address >= 0)
+		return '$' + address.toString(16).toUpperCase().padStart(5, '0')
+
+	return pointer_offset(displacement(size, number1, number2), 'PC')
 }
 
 
